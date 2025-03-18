@@ -12,68 +12,18 @@
     }
         }
     </script>
-    <style>
-        html,
-        body {
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-        }
-        #threejs-container {
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-        /* The YouTube iframe overlay */
-        #yt-iframe {
-          position: absolute;
-          width: 320px;
-          height: 180px;
-          border: none;
-        }
-
-        #main-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: transparent;
-            padding: 0;
-            z-index: 10;
-        }
-
-        #main-nav ul {
-            list-style: none;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
-
-
-        #main-nav ul li button {
-            background-color: transparent;
-            color: #939393;
-            opacity: 0.8;
-            text-transform: uppercase;
-            border: none;
-            cursor: pointer;
-            
-        }
-
-        #main-nav ul li button p{
-            font-size: 2.4rem;
-            font-weight: 700;
-            text-shadow: 0 2px 4px #ffffff;
-        }
-      </style>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
   </head>
   <body>
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
-    <nav id="main-nav">
+    <nav class="main-nav">
+      <a href="/"><img src="./assets/Quadglobal-FF-01 2 (1).png"></a>
         <ul>
-            <li><button class="nav-btn"><p>Page 1</p></button></li>
-            <li><button class="nav-btn"><p>Page 2</p></button></li>
-            <li><button class="nav-btn"><p>Page 3</p></button></li>
+            <li><button class="nav-btn"><p>Home</p></button></li>
+            <li><button class="nav-btn"><p>Videos</p></button></li>
+            <li><button class="nav-btn"><p>Services</p></button></li>
+            <li><button class="nav-btn"><p>Lookbook</p></button></li>
+            <li><button class="nav-btn"><p>Book Us</p></button></li>
         </ul>
     </nav>
     <div id="threejs-container"></div>

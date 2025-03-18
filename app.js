@@ -8,6 +8,7 @@ class App {
     }
 
     _initialize() {
+        this.pageState = "home";
         const width = window.innerWidth;
         const height = window.innerHeight;
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -104,7 +105,31 @@ class App {
         });
     }
 
-    _RotateToVideoPage() {
+    changePage(newPage) {
+        if (!["home", "videos", "services"].includes(newPage)) return;
+
+        this.pageState = newPage;
+        this._updateSceneForPage();
+    }
+
+    _updateSceneForPage() {
+        switch (this.pageState) {
+            case "home":
+                console.log("Switching to Home page");
+                // this._animateHome();
+                break;
+            case "videos":
+                console.log("Switching to Videos page");
+                this._rotateToVideoPage();
+                break;
+            case "services":
+                console.log("Switching to Services page");
+                // this._animateServices();
+                break;
+        }
+    }
+
+    _rotateToVideoPage() {
         if (!this.cameraModel) return;
         console.log("Button clicked");
 
@@ -126,10 +151,14 @@ class App {
 
     _setupNavButtons() {
         const buttons = document.querySelectorAll(".nav-btn");
+        const states = ["home", "videos", "services"];
 
-        buttons[1].addEventListener("click", () => {
-            this._RotateToVideoPage();
-        });
+        for (let i=0; i < states.length ; i++){
+            buttons[i].addEventListener('click', () => {
+                this.changePage(states[i]);
+            });
+        }
+
     }
 }
 
