@@ -38,7 +38,6 @@ class App {
         sunLight.position.set( 2, 0.5, 2);
         this.scene.add(sunLight);
 
-        // const loader = new THREE.CubeTextureLoader();
         this.loader.load('./assets/white_room.jpeg', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping; // Ensures proper HDRI projection
             texture.colorSpace = THREE.SRGBColorSpace; // Keeps colors accurate
@@ -51,8 +50,12 @@ class App {
 
         this._LoadModel();
         this._RAF();
+        this._setupNavButtons();
+
+        this.cameraModel;
     }
 
+     
     _LoadModel() { 
         const loader = new GLTFLoader();
         loader.load('./assets/models/canon-camera.gltf', (gltf) => { 
@@ -61,6 +64,7 @@ class App {
                 c.receiveShadow = false;
             });
             gltf.scene.position.x = 0.13;
+            this.cameraModel = gltf.scene;
             this.scene.add(gltf.scene);
         });
     }
@@ -97,6 +101,34 @@ class App {
             this.renderer.render(this.scene, this.camera);
             this._updateIframePosition();
             this._RAF();
+        });
+    }
+
+    _RotateToVideoPage() {
+        if (!this.cameraModel) return;
+        console.log("Button clicked");
+
+        gsap.to(this.cameraModel.position, {
+            x: 0.1, // Move to X = 0
+            y: 0.05, // Move up slightly
+            z: 0, // Move backward
+            duration: 1.5,
+            ease: "power2.out"
+        });
+    
+        gsap.to(this.cameraModel.rotation, {
+            y: -2.5, // Rotate to face forward
+            x: -0.1,
+            duration: 1.5,
+            ease: "power2.out"
+        });
+    }
+
+    _setupNavButtons() {
+        const buttons = document.querySelectorAll(".nav-btn");
+
+        buttons[1].addEventListener("click", () => {
+            this._RotateToVideoPage();
         });
     }
 }
