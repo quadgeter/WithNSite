@@ -203,8 +203,7 @@ class App {
             duration: 0.5,
             ease: "power2.out"
         });
-
-        0.25, 0.20, 0.20
+        
         gsap.to(this.camera.position, {
             x: 0.25,
             y: 0.2,
