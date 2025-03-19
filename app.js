@@ -102,50 +102,8 @@ class App {
             this.renderer.render(this.scene, this.camera);
             this._updateIframePosition();
             this._RAF();
-        });
-    }
-
-    changePage(newPage) {
-        if (!["home", "videos", "services"].includes(newPage)) return;
-
-        this.pageState = newPage;
-        this._updateSceneForPage();
-    }
-
-    _updateSceneForPage() {
-        switch (this.pageState) {
-            case "home":
-                console.log("Switching to Home page");
-                // this._animateHome();
-                break;
-            case "videos":
-                console.log("Switching to Videos page");
-                this._rotateToVideoPage();
-                break;
-            case "services":
-                console.log("Switching to Services page");
-                // this._animateServices();
-                break;
-        }
-    }
-
-    _rotateToVideoPage() {
-        if (!this.cameraModel) return;
-        console.log("Button clicked");
-
-        gsap.to(this.cameraModel.position, {
-            x: 0.1, // Move to X = 0
-            y: 0.05, // Move up slightly
-            z: 0, // Move backward
-            duration: 1.5,
-            ease: "power2.out"
-        });
-    
-        gsap.to(this.cameraModel.rotation, {
-            y: -2.5, // Rotate to face forward
-            x: -0.1,
-            duration: 1.5,
-            ease: "power2.out"
+            console.log(this.camera.position);
+            console.log(this.cameraModel.position)
         });
     }
 
@@ -153,12 +111,110 @@ class App {
         const buttons = document.querySelectorAll(".nav-btn");
         const states = ["home", "videos", "services"];
 
-        for (let i=0; i < states.length ; i++){
+        for (let i=0; i < states.length; i++){
             buttons[i].addEventListener('click', () => {
                 this.changePage(states[i]);
             });
         }
 
+    }
+
+    changePage(newPage) {
+        if (!["home", "videos", "services"].includes(newPage)) return;
+
+        const currentPage = this.pageState;
+        this.pageState = newPage;
+        this._updateScene(currentPage);
+    }
+
+    _updateScene(current) {
+        switch (this.pageState) {
+            case "home":
+                switch (current) {
+                    case "videos":
+                        this._videoToHomePage();
+                        break;
+                    case "services":
+                        // services to home
+                        break;
+                    default:
+                        console.log("Current Page State not found");
+                }
+                console.log(`Switching to Home page from ${current}`);
+                // this._animateHome();
+                break;
+            case "videos":
+                console.log(`Switching to Videos page ${current}`);
+                this._homeToVideoPage();
+                break;
+            case "services":
+                console.log(`Switching to Services page ${current}`);
+                // this._animateServices();
+                break;
+        }
+    }
+
+    _homeToVideoPage() {
+        if (!this.cameraModel) return;
+
+        gsap.to(this.cameraModel.position, {
+            x: 0, // Move to X = 0
+            y: 0.04, // Move up slightly
+            z: 0.15, // Move backward
+            duration: 0.5,
+            ease: "power2.out"
+        });
+    
+        gsap.to(this.cameraModel.rotation, {
+            y: -1.8, // Rotate to face forward
+            x: 0.25,
+            z: 0.25,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        gsap.to(this.camera.position, {
+            x: 0.3,  // Adjust based on your scene
+            y: 0.16, // Raise the camera slightly
+            z: 0.175,  // Move closer or further
+            duration: 0.5,
+            ease: "power2.out",
+            onUpdate: () => {
+                this.camera.lookAt(this.cameraModel.position); // Keep looking at the model
+            }
+        });
+    }
+
+    _videoToHomePage() {
+        if (!this.cameraModel) return;
+        
+        gsap.to(this.cameraModel.position, {
+            x: 0.13,
+            y: 0,
+            z: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        gsap.to(this.cameraModel.rotation, {
+            y: 0,
+            x: 0,
+            z: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        0.25, 0.20, 0.20
+        gsap.to(this.camera.position, {
+            x: 0.25,
+            y: 0.2,
+            z: 0.2,
+            duration: 0.5,
+            ease: "power2.out",
+            onUpdate: () => {
+                this.camera.lookAt(this.cameraModel);
+            }
+        });
     }
 }
 
