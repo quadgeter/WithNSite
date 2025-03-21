@@ -17,47 +17,85 @@ body {
     border: none;
 }
 
-.main-nav {
+#main-nav {
     position: fixed;
-    top: 0;
+    top: 10%;
     left: 0;
     background: transparent;
     padding: 0;
-    z-index: 10;
-    width: 98%;
+    z-index: 2000;
+    width: 40%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     margin: 1rem;
+    text-align: left;
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
-.main-nav img {
+#main-nav.hidden{
+    opacity: 0;
+}
+
+
+
+#main-nav img {
     width: 100px;
     height: auto;
 }
 
-.main-nav ul {
+#main-nav ul {
     list-style: none;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    margin: none;
+}
+
+#main-nav ul li {
+    margin-bottom: 1rem;
 }
 
 
-.main-nav ul li button {
+#main-nav ul li button {
     background-color: transparent;
     color: #939393;
     opacity: 0.8;
     text-transform: uppercase;
     border: none;
     cursor: pointer;
+    height: 100%;
     
 }
 
-.main-nav ul li button p{
-    font-size: 2rem;
+#main-nav ul li button p{
+    font-size: 2.5rem;
     font-weight: 700;
     text-shadow: 0 2px 4px #ffffff;
+    line-height: 1;
+    margin: 0;
+    text-align: left;
+}
+
+#back-btn {
+    text-transform: uppercase;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    color: #939393;
+    opacity: 0;
+    border: none;
+    cursor: pointer;
+    z-index: 2000;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px #ffffff;
+    transition: opacity 0.3s;
+}
+
+#back-btn.shown {
+    opacity: 1;
 }

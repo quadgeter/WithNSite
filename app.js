@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
+import { CSS3DRenderer, CSS3DObject } from "https://unpkg.com/three/examples/jsm/renderers/CSS3DRenderer.js";
 
 class App {
     constructor(){
@@ -11,16 +12,26 @@ class App {
         this.pageState = "home";
         const width = window.innerWidth;
         const height = window.innerHeight;
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.loader = new THREE.TextureLoader();
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(width,height);
         const container = document.getElementById("threejs-container");
+        this.renderer.domElement.style.position = "absolute";
+        this.renderer.domElement.style.zIndex = "1"; 
         container.appendChild(this.renderer.domElement);
+
+        this.cssRenderer = new CSS3DRenderer();
+        this.cssRenderer.setSize(window.innerWidth, window.innerHeight);
+        this.cssRenderer.domElement.style.position = "absolute";
+        this.cssRenderer.domElement.style.top = "0";
+        this.cssRenderer.domElement.style.pointerEvents = "none";
+        container.appendChild(this.cssRenderer.domElement);
         
         const fov = 75;
         const aspect = width / height;
         const near = 0.1;
-        const far = 1;
+        const far = 100;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
         this.camera.position.set(0.25, 0.20, 0.20);
         
@@ -66,25 +77,44 @@ class App {
             });
             gltf.scene.position.x = 0.13;
             this.cameraModel = gltf.scene;
+            this.cameraModel.scale.set(1.20, 1.20, 1.20);
             this.scene.add(gltf.scene);
         });
     }
 
     // Function to update the iframe's position based on the 3D object's screen location
-    _updateIframePosition() {
+    // FIXME - Youtube video is not clickable/playable
+    _addIframeToCamera() {
+        const iframe = document.createElement("iframe");
+        iframe.style.width = "600px";  // Adjust for screen size
+        iframe.style.height = "400px";
+        iframe.style.border = "none";
+        iframe.style.borderRadius = "16px";
+        iframe.src = "https://www.youtube.com/embed/2_n11Xfld4U";
+        iframe.style.zIndex = "1000";
+        iframe.style.pointerEvents = "auto";
 
-        // const tempVector = new THREE.Vector3();
-        // const iframe = document.getElementById("yt-iframe");
+        const iFrameObject = new CSS3DObject(iframe);
+        iFrameObject.position.set(0.05, -0.3, 0.52); // Adjust based on camera screen position
+        iFrameObject.scale.set(0.001, 0.00105, 0.001); // Scale it down for proper fit
+        iFrameObject.rotation.set(0, 3.15, 0); // Adjust based on camera screen rotation;
+        iFrameObject.element.style.pointerEvents = "none";
+        this.cssRenderer.domElement.style.pointerEvents = "none";
+        this.cssRenderer.domElement.style.zIndex = "1000";
+        this.cssRenderer.domElement.style.cursor = "pointer";
+        this.controls.enabled = true;
 
-        // this.screen.getWorldPosition(tempVector);
-        // // Project that 3D position into normalized device coordinates (NDC)
-        // tempVector.project(this.camera);
-        // // Convert NDC to 2D screen coordinates (in pixels)
-        // const x = (tempVector.x * 0.5 + 0.5) * window.innerWidth;
-        // const y = (-tempVector.y * 0.5 + 0.5) * window.innerHeight;
-        // // Adjust the iframe's position so it's centered on that point
-        // iframe.style.left = `${x - iframe.offsetWidth / 2}px`;
-        // iframe.style.top = `${y - iframe.offsetHeight / 2}px`;
+        this.iframeObject = iFrameObject;
+        this.cameraModel.add(iFrameObject);
+    }
+
+    _removeIframeFromCamera() {
+        if (this.iframeObject && this.cameraModel) {
+            this.cameraModel.remove(this.iframeObject);
+            this.iframeObject = null;
+        }
+        // Reset pointer events to allow OrbitControls on home page
+        this.cssRenderer.domElement.style.pointerEvents = "none";
     }
     
      _onWindowResize(){
@@ -94,28 +124,25 @@ class App {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
-    }
+        this.cssRenderer.setSize(width, height);
 
-    _RAF() {
-        requestAnimationFrame((t) => {
-            this.controls.update();
-            this.renderer.render(this.scene, this.camera);
-            this._updateIframePosition();
-            this._RAF();
-            console.log(this.camera.position);
-            console.log(this.cameraModel.position)
-        });
     }
 
     _setupNavButtons() {
-        const buttons = document.querySelectorAll(".nav-btn");
+        const navButtons = document.querySelectorAll(".nav-btn");
         const states = ["home", "videos", "services"];
 
         for (let i=0; i < states.length; i++){
-            buttons[i].addEventListener('click', () => {
+            navButtons[i].addEventListener('click', () => {
                 this.changePage(states[i]);
             });
         }
+
+        const backBtn = document.getElementById("back-btn");
+        backBtn.addEventListener('click', () => {
+            this.changePage("home");
+        });
+
 
     }
 
@@ -132,6 +159,8 @@ class App {
             case "home":
                 switch (current) {
                     case "videos":
+                        this.controls.enabled = true;
+                        this._removeIframeFromCamera();
                         this._videoToHomePage();
                         break;
                     case "services":
@@ -145,6 +174,7 @@ class App {
                 break;
             case "videos":
                 console.log(`Switching to Videos page ${current}`);
+                this.controls.enabled = false;
                 this._homeToVideoPage();
                 break;
             case "services":
@@ -157,18 +187,30 @@ class App {
     _homeToVideoPage() {
         if (!this.cameraModel) return;
 
+        const mainNav = document.getElementById("main-nav");
+        if (mainNav) {
+            mainNav.classList.add("hidden");
+            console.log("Main Nav hidden");
+        }
+
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+            backBtn.classList.add("shown");
+            console.log("back button shown");
+        }
+
         gsap.to(this.cameraModel.position, {
-            x: 0, // Move to X = 0
-            y: 0.04, // Move up slightly
-            z: 0.15, // Move backward
+            x: 0.025, // Move to X = 0
+            y: 0.02, // Move up slightly
+            z: 0.115, // Move backward
             duration: 0.5,
             ease: "power2.out"
         });
     
         gsap.to(this.cameraModel.rotation, {
             y: -1.8, // Rotate to face forward
-            x: 0.25,
-            z: 0.25,
+            x: 0.135,
+            z: 0.2,
             duration: 0.5,
             ease: "power2.out"
         });
@@ -183,10 +225,24 @@ class App {
                 this.camera.lookAt(this.cameraModel.position); // Keep looking at the model
             }
         });
+
+        this._addIframeToCamera();
     }
 
     _videoToHomePage() {
         if (!this.cameraModel) return;
+
+        const mainNav = document.getElementById("main-nav");
+        if (mainNav) {
+            mainNav.classList.remove("hidden");
+            console.log("Main Nav shown");
+        }
+
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+            backBtn.classList.remove("shown");
+            console.log("back button hidden");
+        }
         
         gsap.to(this.cameraModel.position, {
             x: 0.13,
@@ -213,6 +269,15 @@ class App {
             onUpdate: () => {
                 this.camera.lookAt(this.cameraModel);
             }
+        });
+    }
+
+    _RAF() {
+        requestAnimationFrame(() => {
+            this.controls.update();
+            this.renderer.render(this.scene, this.camera);
+            this.cssRenderer.render(this.scene, this.camera);
+            this._RAF();
         });
     }
 }
