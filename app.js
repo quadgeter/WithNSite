@@ -25,7 +25,9 @@ class App {
         this.cssRenderer.setSize(window.innerWidth, window.innerHeight);
         this.cssRenderer.domElement.style.position = "absolute";
         this.cssRenderer.domElement.style.top = "0";
+        this.cssRenderer.domElement.style.left = "0";
         this.cssRenderer.domElement.style.pointerEvents = "none";
+        this.cssRenderer.domElement.style.zIndex = "10";
         container.appendChild(this.cssRenderer.domElement);
         
         const fov = 75;
@@ -39,12 +41,7 @@ class App {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
-
-        const screenGeometry = new THREE.PlaneGeometry(0.6, 0.4);
-        const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        this.screen = new THREE.Mesh(screenGeometry, screenMaterial);
-        this.screen.position.set(0, 0, 0.51);
-
+        this.controls.enablePan = false;
         
         const sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
         sunLight.position.set( 2, 0.5, 2);
@@ -60,11 +57,13 @@ class App {
 
         window.addEventListener('resize', this._onWindowResize.bind(this));
 
+        this.cameraModel;
+        this.iFrameObject;
         this._LoadModel();
         this._RAF();
         this._setupNavButtons();
 
-        this.cameraModel;
+        
     }
 
      
@@ -77,41 +76,67 @@ class App {
             });
             gltf.scene.position.x = 0.13;
             this.cameraModel = gltf.scene;
-            this.cameraModel.scale.set(1.20, 1.20, 1.20);
-            this.scene.add(gltf.scene);
+            const axesHelper = new THREE.AxesHelper(1); // 1 unit long
+            this.cameraModel.add(axesHelper);
+            // this.cameraModel.scale.set(1.2, 1.2, 1.2);
+
+            const screenMarker = new THREE.Object3D();
+            screenMarker.name = "screenMarker";
+            // Set this position to match the screen location on your camera model.
+            // For example, if the screen is 0.2 units in front of the camera model’s origin:
+            screenMarker.position.set(0.01, 0.075, -0.145);
+            screenMarker.scale.set(0.00007, 0.00007, 0.00007);
+            screenMarker.rotation.y = Math.PI; // Rotate to face the camera
+            this.cameraModel.add(screenMarker);
+
+            this.scene.add(this.cameraModel);
         });
     }
 
     // Function to update the iframe's position based on the 3D object's screen location
     // FIXME - Youtube video is not clickable/playable
+
     _addIframeToCamera() {
+        const wrapperDiv = document.createElement("div");
+        // Set the actual layout dimensions to a large size.
+        wrapperDiv.style.width = "1200px";
+        wrapperDiv.style.height = "800px";
+
         const iframe = document.createElement("iframe");
-        iframe.style.width = "600px";  // Adjust for screen size
-        iframe.style.height = "400px";
+        iframe.style.width = "1200px";  // Adjust for screen size
+        iframe.style.height = "800px";
         iframe.style.border = "none";
         iframe.style.borderRadius = "16px";
         iframe.src = "https://www.youtube.com/embed/2_n11Xfld4U";
-        iframe.style.zIndex = "1000";
         iframe.style.pointerEvents = "auto";
+        wrapperDiv.appendChild(iframe);
 
-        const iFrameObject = new CSS3DObject(iframe);
-        iFrameObject.position.set(0.05, -0.3, 0.52); // Adjust based on camera screen position
-        iFrameObject.scale.set(0.001, 0.00105, 0.001); // Scale it down for proper fit
-        iFrameObject.rotation.set(0, 3.15, 0); // Adjust based on camera screen rotation;
-        iFrameObject.element.style.pointerEvents = "none";
-        this.cssRenderer.domElement.style.pointerEvents = "none";
+
+        const pos = new THREE.Vector3(5, -110, 180);
+        pos.normalize(); // makes it a unit vector (same direction, length = 1)
+        pos.multiplyScalar(10); 
+
+        this.iFrameObject = new CSS3DObject(wrapperDiv);
+        this.iFrameObject.scale.set(1, 1, 1); // Scale it down for proper fit
         this.cssRenderer.domElement.style.zIndex = "1000";
-        this.cssRenderer.domElement.style.cursor = "pointer";
-        this.controls.enabled = true;
+        this.controls.enabled = false;
 
-        this.iframeObject = iFrameObject;
-        this.cameraModel.add(iFrameObject);
+        const marker = this.cameraModel.getObjectByName("screenMarker");
+        if (marker) {
+            // Attach the iframe as a child of the marker so it automatically inherits the marker’s position & rotation.
+            marker.add(this.iFrameObject);
+        } else {
+            console.error("Screen marker not found on cameraModel!");
+        }
+        // this.cameraModel.add(this.iframeObject);
     }
 
     _removeIframeFromCamera() {
-        if (this.iframeObject && this.cameraModel) {
-            this.cameraModel.remove(this.iframeObject);
-            this.iframeObject = null;
+        const marker = this.cameraModel.getObjectByName("screenMarker");
+
+        if (marker && this.cameraModel) {
+            marker.remove(this.iFrameObject);
+            this.iFrameObject = null;
         }
         // Reset pointer events to allow OrbitControls on home page
         this.cssRenderer.domElement.style.pointerEvents = "none";
@@ -212,7 +237,10 @@ class App {
             x: 0.135,
             z: 0.2,
             duration: 0.5,
-            ease: "power2.out"
+            ease: "power2.out",
+            onComplete: () => {
+                this._addIframeToCamera();
+            }
         });
 
         gsap.to(this.camera.position, {
@@ -226,7 +254,6 @@ class App {
             }
         });
 
-        this._addIframeToCamera();
     }
 
     _videoToHomePage() {
@@ -277,6 +304,8 @@ class App {
             this.controls.update();
             this.renderer.render(this.scene, this.camera);
             this.cssRenderer.render(this.scene, this.camera);
+            // if (this.cameraModel) console.log("Camera pos:", this.cameraModel.position)
+            // if (this.iframeObject) console.log("iFrame pos:", this.iframeObject.position)
             this._RAF();
         });
     }
