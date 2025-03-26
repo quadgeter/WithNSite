@@ -1,3 +1,7 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 html,
 body {
     margin: 0;
@@ -66,16 +70,36 @@ body {
     border: none;
     cursor: pointer;
     height: 100%;
+    padding: 0;
     
 }
 
-#main-nav ul li button p{
+#main-nav ul li a {
+    text-decoration: none;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px #ffffff;
+    line-height: 1;
+    text-align: left;
+
+    background-color: transparent;
+    color: #939393;
+    opacity: 0.8;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    height: 100%;
+}
+
+#main-nav ul li button p,
+#main-nav ul li a p{
     font-size: 2.5rem;
     font-weight: 700;
     text-shadow: 0 2px 4px #ffffff;
     line-height: 1;
     margin: 0;
     text-align: left;
+    width: 100%;
 }
 
 #back-btn {
@@ -144,6 +168,8 @@ body {
     border-bottom-right-radius: 12px;
     scroll-behavior: smooth;
     height: fit-content;
+    backdrop-filter: blur(10px);         /* the blur effect */
+    -webkit-backdrop-filter: blur(10px)
 }
 
 .playlist-inner::-webkit-scrollbar {
@@ -181,7 +207,7 @@ body {
 .playlist-item .thumb {
     width: 150px;
     height: auto;
-    border-radius: 6px;
+    border-radius: 8px 0 0 8px;
 }
 .playlist-item .meta {
     margin-left: 10px;
@@ -194,6 +220,7 @@ body {
     font-weight: bold;
     margin-bottom: 0.8rem;
     margin-top: 0.8rem;
+    color: rgba(0, 0, 0, 0.7)
 }
 
 .small-text {
