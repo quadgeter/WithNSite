@@ -99,3 +99,117 @@ body {
 #back-btn.shown {
     opacity: 1;
 }
+
+#playlist-container {
+    position: absolute;
+    top: 5%;
+    right: 2%;
+    width: 40%;
+    height: 90%;
+    z-index: -1;
+    box-sizing: border-box;
+    background: transparent;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid white;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+#playlist-container.shown {
+    opacity: 1;
+    z-index: 1000;
+}
+
+.playlist-header {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 2rem;
+    border-radius: 8px 8px 0 0;
+    padding: 1rem;
+}
+.playlist-header img {
+    width: 100px;
+}
+
+.playlist-inner {
+    flex: 1;
+    overflow-y: auto;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    scroll-behavior: smooth;
+    height: fit-content;
+}
+
+.playlist-inner::-webkit-scrollbar {
+    width: 1rem;
+}
+
+.playlist-inner::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.playlist-inner::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.playlist-inner {
+    scrollbar-color: white transparent;
+    scrollbar-width: 1.5rem;
+}
+
+.playlist-item {
+    display: flex;
+    margin: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: none;
+    background: rgba(255,255,255,0.7);
+    transition: background 0.2s;
+    height: 6rem;
+
+}
+.playlist-item:hover {
+    background: rgba(0,0,0,0.05);
+}
+.playlist-item .thumb {
+    width: 150px;
+    height: auto;
+    border-radius: 6px;
+}
+.playlist-item .meta {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.playlist-item .title {
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.small-text {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
+}
+
+.playlist-item .channel,
+.playlist-item .published {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.playlist-item .channel {
+    margin-right: 1rem;
+}
+

@@ -35,13 +35,14 @@ class App {
         const near = 0.1;
         const far = 100;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-        this.camera.position.set(0.25, 0.20, 0.20);
+        this.camera.position.set(0.25, 0.15, 0.25);
         
         this.scene = new THREE.Scene();
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
         this.controls.enablePan = false;
+        this.controls.enableZoom = false;
         
         const sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
         sunLight.position.set( 2, 0.5, 2);
@@ -62,7 +63,7 @@ class App {
         this._LoadModel();
         this._RAF();
         this._setupNavButtons();
-
+        this._loadPlaylistVideos("PLTo6svdhIL1cxS4ffGueFpVCF756ip-ab");
         
     }
 
@@ -76,16 +77,14 @@ class App {
             });
             gltf.scene.position.x = 0.13;
             this.cameraModel = gltf.scene;
-            const axesHelper = new THREE.AxesHelper(1); // 1 unit long
-            this.cameraModel.add(axesHelper);
-            // this.cameraModel.scale.set(1.2, 1.2, 1.2);
+            this.cameraModel.scale.set(1.25, 1.25, 1.25);
 
             const screenMarker = new THREE.Object3D();
             screenMarker.name = "screenMarker";
             // Set this position to match the screen location on your camera model.
             // For example, if the screen is 0.2 units in front of the camera model’s origin:
             screenMarker.position.set(0.01, 0.075, -0.145);
-            screenMarker.scale.set(0.00007, 0.00007, 0.00007);
+            screenMarker.scale.set(0.000055, 0.000061, 0.00006);
             screenMarker.rotation.y = Math.PI; // Rotate to face the camera
             this.cameraModel.add(screenMarker);
 
@@ -93,12 +92,63 @@ class App {
         });
     }
 
-    // Function to update the iframe's position based on the 3D object's screen location
-    // FIXME - Youtube video is not clickable/playable
+    async _loadPlaylistVideos(playlistId) {
+        const API_KEY = 'AIzaSyCXrPjz9wCr2upv1iXAYwE5AbHP9wirWAo';
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`);
+        if (!res.ok) return console.error("Failed to load videos");
+        const data = await res.json();
+      
+        const container = document.getElementById("playlist-container");
+        container.innerHTML = `
+        <div class="playlist-header">
+            <h3 class="playlist-title">WithNSite</h3>
+            <img src="./assets/youtubelogo.png" alt="youtube logo" class="playlist-logo">
+        </div>`;
+
+        const playlistInner = document.createElement("div");
+        playlistInner.classList.add("playlist-inner");
+      
+        data.items.forEach(item => {
+            const { title, thumbnails, channelTitle, publishedAt, resourceId } = item.snippet;
+            const videoId = resourceId.videoId;
+        
+            const videoDiv = document.createElement("div");
+            videoDiv.classList.add("playlist-item");
+            videoDiv.innerHTML = `
+            <img src="${thumbnails.medium.url}" alt="${title}" class="thumb" />
+            <div class="meta">
+                <h4 class="title">${title}</h4>
+                <div class="small-text">
+                    <p class="channel">${channelTitle}</p>
+                    <p class="published">${timeSince(new Date(publishedAt))} ago</p>
+                </div>
+            </div>
+            `;
+        
+            videoDiv.addEventListener("click", () => {
+                this._changeIframeVideo(videoId); // define this to update the player
+            });
+            
+            playlistInner.appendChild(videoDiv);
+        });
+
+        container.appendChild(playlistInner);
+
+        function timeSince(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            const months = Math.floor(seconds / (30 * 24 * 3600));
+            const days = Math.floor(seconds / (24 * 3600));
+            if (months > 0) return `${months} month${months > 1 ? 's' : ''}`;
+            if (days > 0) return `${days} day${days > 1 ? 's' : ''}`;
+            return `${Math.floor(seconds / 3600)} hour${seconds > 3600 ? 's' : ''}`;
+        }
+    }
+      
+
+    // Function to update the add iframe and fix position based on Camera screen location
 
     _addIframeToCamera() {
         const wrapperDiv = document.createElement("div");
-        // Set the actual layout dimensions to a large size.
         wrapperDiv.style.width = "1200px";
         wrapperDiv.style.height = "800px";
 
@@ -107,7 +157,7 @@ class App {
         iframe.style.height = "800px";
         iframe.style.border = "none";
         iframe.style.borderRadius = "16px";
-        iframe.src = "https://www.youtube.com/embed/2_n11Xfld4U";
+        iframe.src = "https://www.youtube.com/embed/2_n11Xfld4U"; // 
         iframe.style.pointerEvents = "auto";
         wrapperDiv.appendChild(iframe);
 
@@ -140,6 +190,21 @@ class App {
         }
         // Reset pointer events to allow OrbitControls on home page
         this.cssRenderer.domElement.style.pointerEvents = "none";
+    }
+
+    _changeIframeVideo(videoId) {
+        if (this.iFrameObject && this.iFrameObject.element) {
+            const iframe = this.iFrameObject.element.querySelector("iframe");
+            if (iframe) {
+                iframe.src = "";
+                iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                console.log("Changed video to", `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1&modestbranding=1&enablejsapi=1`);
+            } else {
+                console.warn("Iframe not found inside CSS3DObject.");
+            }
+        } else {
+            console.warn("iframeObject is not set.");
+        }
     }
     
      _onWindowResize(){
@@ -224,6 +289,12 @@ class App {
             console.log("back button shown");
         }
 
+        const playListContainer = document.getElementById("playlist-container");
+        if (playListContainer) {
+            playListContainer.classList.add("shown");
+            console.log("playlist shown");
+        }
+
         gsap.to(this.cameraModel.position, {
             x: 0.025, // Move to X = 0
             y: 0.02, // Move up slightly
@@ -259,6 +330,12 @@ class App {
     _videoToHomePage() {
         if (!this.cameraModel) return;
 
+        const playListContainer = document.getElementById("playlist-container");
+        if (playListContainer) {
+            playListContainer.classList.remove("shown");
+            console.log("playlist hidden");
+        }
+
         const mainNav = document.getElementById("main-nav");
         if (mainNav) {
             mainNav.classList.remove("hidden");
@@ -272,7 +349,7 @@ class App {
         }
         
         gsap.to(this.cameraModel.position, {
-            x: 0.13,
+            x: 0.10,
             y: 0,
             z: 0,
             duration: 0.5,
@@ -289,8 +366,8 @@ class App {
         
         gsap.to(this.camera.position, {
             x: 0.25,
-            y: 0.2,
-            z: 0.2,
+            y: 0.15,
+            z: 0.25,
             duration: 0.5,
             ease: "power2.out",
             onUpdate: () => {
