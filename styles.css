@@ -34,11 +34,12 @@ body {
     margin: 1rem;
     text-align: left;
     opacity: 1;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
 }
 
 #main-nav.hidden{
     opacity: 0;
+    z-index: -1;
 }
 
 
@@ -113,15 +114,16 @@ body {
     opacity: 0;
     border: none;
     cursor: pointer;
-    z-index: 2000;
+    z-index: -1;
     font-size: 2.5rem;
     font-weight: 700;
     text-shadow: 0 2px 4px #ffffff;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
 }
 
 #back-btn.shown {
     opacity: 1;
+    z-index: 1000;
 }
 
 #playlist-container {
@@ -138,7 +140,7 @@ body {
     border: 1px solid white;
     padding: 0;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
     display: flex;
     flex-direction: column;
 }
@@ -240,3 +242,20 @@ body {
     margin-right: 1rem;
 }
 
+
+.lookbook-container {
+    z-index: -1;
+    opacity: 0;
+    position: absolute;
+    top: 25%;
+    left: 0;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.5s;
+}
+
+.lookbook-container.shown {
+    opacity: 1;
+    z-index: 1000;
+}

@@ -42,7 +42,7 @@ class App {
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
         this.controls.enablePan = false;
-        this.controls.enableZoom = false;
+        this.controls.enableZoom = true;
         
         const sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
         sunLight.position.set( 2, 0.5, 2);
@@ -55,6 +55,8 @@ class App {
             this.scene.background = texture;  // Set background to the HDRI
             this.scene.environment = texture; 
         });
+
+        this.states = ["home", "videos", "lookbook", "services", "book", "about"];
 
         window.addEventListener('resize', this._onWindowResize.bind(this));
 
@@ -78,6 +80,8 @@ class App {
             gltf.scene.position.x = 0.13;
             this.cameraModel = gltf.scene;
             this.cameraModel.scale.set(1.25, 1.25, 1.25);
+            const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
+            this.cameraModel.add(axesHelper);
 
             const screenMarker = new THREE.Object3D();
             screenMarker.name = "screenMarker";
@@ -220,24 +224,23 @@ class App {
 
     _setupNavButtons() {
         const navButtons = document.querySelectorAll(".nav-btn");
-        const states = ["home", "videos", "services"];
 
-        for (let i=0; i < states.length; i++){
+        for (let i=0; i < this.states.length; i++){
             navButtons[i].addEventListener('click', () => {
-                this.changePage(states[i]);
+                this.changePage(this.states[i]);
             });
         }
 
-        const backBtn = document.getElementById("back-btn");
-        backBtn.addEventListener('click', () => {
-            this.changePage("home");
+        const backBtn = document.querySelectorAll("#back-btn");
+        backBtn.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.changePage("home");
+            });
         });
-
-
     }
 
     changePage(newPage) {
-        if (!["home", "videos", "services"].includes(newPage)) return;
+        if (!this.states.includes(newPage)) return;
 
         const currentPage = this.pageState;
         this.pageState = newPage;
@@ -256,6 +259,10 @@ class App {
                     case "services":
                         // services to home
                         break;
+                    case "lookbook":
+                        this.controls.enabled = true;
+                        this._lookbookToHome();
+                        break;
                     default:
                         console.log("Current Page State not found");
                 }
@@ -271,12 +278,17 @@ class App {
                 console.log(`Switching to Services page ${current}`);
                 // this._animateServices();
                 break;
+            case "lookbook":
+                console.log(`Switching to Lookbook page ${current}`);
+                this.controls.enabled = false;
+                this._homeToLookbookPage();
+                break;
+            default:
+                console.log("Page State not found");
         }
     }
 
-    _homeToVideoPage() {
-        if (!this.cameraModel) return;
-
+    _hideMainNav() {
         const mainNav = document.getElementById("main-nav");
         if (mainNav) {
             mainNav.classList.add("hidden");
@@ -288,6 +300,32 @@ class App {
             backBtn.classList.add("shown");
             console.log("back button shown");
         }
+    }
+
+    _showMainNav() {
+        const playListContainer = document.getElementById("playlist-container");
+        if (playListContainer) {
+            playListContainer.classList.remove("shown");
+            console.log("playlist hidden");
+        }
+
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+            backBtn.classList.remove("shown");
+            console.log("back button hidden");
+        }
+
+        const mainNav = document.getElementById("main-nav");
+        if (mainNav) {
+            mainNav.classList.remove("hidden");
+            console.log("Main Nav shown");
+        }
+    }
+
+    _homeToVideoPage() {
+        if (!this.cameraModel) return;
+    
+        this._hideMainNav();
 
         const playListContainer = document.getElementById("playlist-container");
         if (playListContainer) {
@@ -330,17 +368,7 @@ class App {
     _videoToHomePage() {
         if (!this.cameraModel) return;
 
-        const playListContainer = document.getElementById("playlist-container");
-        if (playListContainer) {
-            playListContainer.classList.remove("shown");
-            console.log("playlist hidden");
-        }
-
-        const mainNav = document.getElementById("main-nav");
-        if (mainNav) {
-            mainNav.classList.remove("hidden");
-            console.log("Main Nav shown");
-        }
+        this._showMainNav();
 
         const backBtn = document.getElementById("back-btn");
         if (backBtn) {
@@ -375,6 +403,106 @@ class App {
             }
         });
     }
+
+    _showLookbookBtns() {
+        const lookbookContainer = document.querySelector(".lookbook-container");
+        lookbookContainer.classList.add("shown");
+        console.log("Lookbook buttons shown");
+    }
+    
+    _hideLookbookBtns() {
+        const lookbookContainer = document.querySelector(".lookbook-container");
+        lookbookContainer.classList.remove("shown");
+        console.log("Lookbook buttons hidden");
+    }
+
+    _addLookbookToCamera() {
+        // complete
+    }
+
+    _homeToLookbookPage() {
+        if (!this.cameraModel) return;
+
+        this._hideMainNav();
+        this._showLookbookBtns();
+    
+        gsap.to(this.cameraModel.position, {
+            x: 0.005,
+            z: -0.15,
+            y: -0.1,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        gsap.to(this.cameraModel.scale, {
+            x: 2.5,
+            y: 2.5,
+            z: 2.5,
+            duration: 0.5,
+            ease: "power2.out" 
+        });
+
+        gsap.to(this.cameraModel.rotation, {
+            x: -0.02,
+            y: -2.5,
+            duration: 0.5,
+            ease: "power2.out",
+        });
+    
+        gsap.to(this.camera.position, {
+            x: 0.25,
+            y: 0.15,
+            z: 0.25,
+            duration: 0.5,
+            ease: "power2.out",
+            onUpdate: () => {
+                this.camera.lookAt(this.cameraModel.position);
+            }
+        });
+    }
+
+    _lookbookToHome(){
+        if (!this.cameraModel) return;
+
+        this._showMainNav();
+        this._hideLookbookBtns();
+
+        gsap.to(this.cameraModel.position, {
+            x: 0.10,
+            y: 0,
+            z: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        gsap.to(this.cameraModel.rotation, {
+            y: 0,
+            x: 0,
+            z: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        gsap.to(this.cameraModel.scale, {
+            x: 1.25,
+            y: 1.25,
+            z: 1.25,
+            duration: 0.5,
+            ease: "power2.out",
+        });
+
+        gsap.to(this.camera.position, {
+            x: 0.25,
+            y: 0.15,
+            z: 0.25,
+            duration: 0.5,
+            ease: "power2.out",
+            onUpdate: () => {
+                this.camera.lookAt(this.cameraModel.position);
+            }
+        });
+    }
+    
 
     _RAF() {
         requestAnimationFrame(() => {
