@@ -63,9 +63,9 @@ class App {
         this.cameraModel;
         this.iFrameObject;
         this._LoadModel();
-        this._RAF();
         this._setupNavButtons();
         this._loadPlaylistVideos("PLTo6svdhIL1cxS4ffGueFpVCF756ip-ab");
+        this._RAF();
         
     }
 
@@ -79,7 +79,7 @@ class App {
             });
             gltf.scene.position.x = 0.13;
             this.cameraModel = gltf.scene;
-            this.cameraModel.scale.set(1.25, 1.25, 1.25);
+            this.cameraModel.scale.set(1.25, 1.4, 1.25);
             const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
             this.cameraModel.add(axesHelper);
 
@@ -87,12 +87,29 @@ class App {
             screenMarker.name = "screenMarker";
             // Set this position to match the screen location on your camera model.
             // For example, if the screen is 0.2 units in front of the camera model’s origin:
-            screenMarker.position.set(0.01, 0.075, -0.145);
-            screenMarker.scale.set(0.000055, 0.000061, 0.00006);
+            screenMarker.position.set(0.0135, 0.0625, -0.125);
+            screenMarker.scale.set(0.000068, 0.000075, 0.00007);
             screenMarker.rotation.y = Math.PI; // Rotate to face the camera
             this.cameraModel.add(screenMarker);
 
             this.scene.add(this.cameraModel);
+        });
+    }
+
+    _setupNavButtons() {
+        const navButtons = document.querySelectorAll(".nav-btn");
+
+        for (let i=0; i < this.states.length; i++){
+            navButtons[i].addEventListener('click', () => {
+                this.changePage(this.states[i]);
+            });
+        }
+
+        const backBtn = document.querySelectorAll("#back-btn");
+        backBtn.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.changePage("home");
+            });
         });
     }
 
@@ -210,34 +227,6 @@ class App {
             console.warn("iframeObject is not set.");
         }
     }
-    
-     _onWindowResize(){
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(width, height);
-        this.cssRenderer.setSize(width, height);
-
-    }
-
-    _setupNavButtons() {
-        const navButtons = document.querySelectorAll(".nav-btn");
-
-        for (let i=0; i < this.states.length; i++){
-            navButtons[i].addEventListener('click', () => {
-                this.changePage(this.states[i]);
-            });
-        }
-
-        const backBtn = document.querySelectorAll("#back-btn");
-        backBtn.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.changePage("home");
-            });
-        });
-    }
 
     changePage(newPage) {
         if (!this.states.includes(newPage)) return;
@@ -261,6 +250,7 @@ class App {
                         break;
                     case "lookbook":
                         this.controls.enabled = true;
+                        this._removeLookbookPage();
                         this._lookbookToHome();
                         break;
                     default:
@@ -334,9 +324,9 @@ class App {
         }
 
         gsap.to(this.cameraModel.position, {
-            x: 0.025, // Move to X = 0
+            x: 0.015, // Move to X = 0
             y: 0.02, // Move up slightly
-            z: 0.115, // Move backward
+            z: 0.105, // Move backward
             duration: 0.5,
             ease: "power2.out"
         });
@@ -417,7 +407,88 @@ class App {
     }
 
     _addLookbookToCamera() {
-        // complete
+        const wrapperDiv = document.createElement("div");
+        wrapperDiv.style.width = "1200px";
+        wrapperDiv.style.height = "800px";
+        wrapperDiv.style.overflow = "hidden";
+        wrapperDiv.style.position = "relative";
+
+        const images = [
+            "./assets/lookbook/jordan_ferrari.jpeg",
+            "./assets/lookbook/kobe_icebucket.jpeg",
+            "./assets/lookbook/malcomx.jpeg",
+            "assets/lookbook/martinluther.jpeg"
+        ];
+
+        let currentIndex = 0;
+
+        const img = document.createElement("img");
+        img.src = images[currentIndex];
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        img.style.borderRadius = "24px";
+        wrapperDiv.appendChild(img);
+
+        const left = document.createElement("button");
+        const leftButtonImg = document.createElement("img");
+        leftButtonImg.src = "./assets/left-chevron.png";
+        left.appendChild(leftButtonImg);
+        left.style.position = "absolute";
+        left.style.left = "20px";
+        left.style.top = "50%";
+        left.style.transform = "translateY(-50%)";
+        left.style.fontSize = "2rem";
+        left.style.background = "transparent";
+        left.style.color = "white";
+        left.style.border = "none";
+        left.style.cursor = "pointer";
+
+        const right = document.createElement("button");
+        const rightButtonImg = document.createElement("img");
+        rightButtonImg.src = "./assets/chevron.png";
+        right.appendChild(rightButtonImg);
+        right.style.position = "absolute";
+        right.style.right = "20px";
+        right.style.top = "50%";
+        right.style.transform = "translateY(-50%)";
+        right.style.fontSize = "2rem";
+        right.style.background = "transparent";
+        right.style.color = "white";
+        right.style.border = "none";
+        right.style.cursor = "pointer";
+
+        left.onclick = () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            img.src = images[currentIndex];
+        };
+        right.onclick = () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            img.src = images[currentIndex];
+        };
+
+        wrapperDiv.appendChild(left);
+        wrapperDiv.appendChild(right);
+        
+        const lookBookObject = new CSS3DObject(wrapperDiv);
+        lookBookObject.scale.set(1,1,1);
+
+        const marker = this.cameraModel.getObjectByName("screenMarker");
+        if (marker) {
+            marker.add(lookBookObject);
+        } else {
+            console.log("ERROR, marker not found");
+        }
+        this.lookBookObject = lookBookObject;
+    }
+
+    _removeLookbookPage() {
+        const marker = this.cameraModel.getObjectByName("screenMarker");
+
+        if (marker && this.cameraModel) {
+            marker.remove(this.lookBookObject);
+            this.lookBookObject = null;
+        }
     }
 
     _homeToLookbookPage() {
@@ -427,9 +498,9 @@ class App {
         this._showLookbookBtns();
     
         gsap.to(this.cameraModel.position, {
-            x: 0.005,
+            x: 0.01,
             z: -0.15,
-            y: -0.1,
+            y: -0.125,
             duration: 0.5,
             ease: "power2.out"
         });
@@ -444,19 +515,23 @@ class App {
 
         gsap.to(this.cameraModel.rotation, {
             x: -0.02,
-            y: -2.5,
+            y: -2.225,
+            z: -0.025,
             duration: 0.5,
             ease: "power2.out",
         });
     
         gsap.to(this.camera.position, {
-            x: 0.25,
+            x: 0.35,
             y: 0.15,
             z: 0.25,
             duration: 0.5,
             ease: "power2.out",
             onUpdate: () => {
                 this.camera.lookAt(this.cameraModel.position);
+            },
+            onComplete: () => {
+                this._addLookbookToCamera();
             }
         });
     }
@@ -513,6 +588,17 @@ class App {
             // if (this.iframeObject) console.log("iFrame pos:", this.iframeObject.position)
             this._RAF();
         });
+    }
+
+    _onWindowResize(){
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+        this.cssRenderer.setSize(width, height);
+
     }
 }
 
