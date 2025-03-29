@@ -114,7 +114,7 @@ class App {
     }
 
     async _loadPlaylistVideos(playlistId) {
-        const API_KEY = 'AIzaSyCXrPjz9wCr2upv1iXAYwE5AbHP9wirWAo';
+        const API_KEY = '-';
         const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`);
         if (!res.ok) return console.error("Failed to load videos");
         const data = await res.json();
