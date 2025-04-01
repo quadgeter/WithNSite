@@ -99,6 +99,7 @@ class App {
     _setupNavButtons() {
         const navButtons = document.querySelectorAll(".nav-btn");
 
+        // setup states videos to about, skip home
         for (let i=0; i < this.states.length; i++){
             navButtons[i].addEventListener('click', () => {
                 this.changePage(this.states[i]);
@@ -246,7 +247,8 @@ class App {
                         this._videoToHomePage();
                         break;
                     case "services":
-                        // services to home
+                        this.controls.enabled = true;
+                        this._servicesToHome();
                         break;
                     case "lookbook":
                         this.controls.enabled = true;
@@ -266,7 +268,8 @@ class App {
                 break;
             case "services":
                 console.log(`Switching to Services page ${current}`);
-                // this._animateServices();
+                this.controls.enabled = false;
+                this._homeToServicesPage();
                 break;
             case "lookbook":
                 console.log(`Switching to Lookbook page ${current}`);
@@ -440,7 +443,7 @@ class App {
         left.style.transform = "translateY(-50%)";
         left.style.fontSize = "2rem";
         left.style.background = "transparent";
-        left.style.color = "white";
+        left.style.color = "#939393";
         left.style.border = "none";
         left.style.cursor = "pointer";
 
@@ -454,7 +457,7 @@ class App {
         right.style.transform = "translateY(-50%)";
         right.style.fontSize = "2rem";
         right.style.background = "transparent";
-        right.style.color = "white";
+        right.style.color = "#939393";
         right.style.border = "none";
         right.style.cursor = "pointer";
 
@@ -577,6 +580,20 @@ class App {
             }
         });
     }
+
+    _homeToServicesPage() {
+        if (!this.cameraModel) return;
+
+        this._hideMainNav();
+
+
+    }
+
+    _servicesToHome() {
+        if (!this.cameraModel) return;
+
+        this._showMainNav();
+    }
     
 
     _RAF() {
@@ -584,8 +601,6 @@ class App {
             this.controls.update();
             this.renderer.render(this.scene, this.camera);
             this.cssRenderer.render(this.scene, this.camera);
-            // if (this.cameraModel) console.log("Camera pos:", this.cameraModel.position)
-            // if (this.iframeObject) console.log("iFrame pos:", this.iframeObject.position)
             this._RAF();
         });
     }
