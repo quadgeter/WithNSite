@@ -305,3 +305,149 @@ body {
 .cta-main:hover {
     background-color: #939393;
 }
+
+#services-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 80%;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+    z-index: -1;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+#services-panel.shown {
+    opacity: 1;
+    z-index: 10;
+}
+  
+  .service {
+    margin-bottom: 1.5rem;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .cta-buttons button {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid white;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .cta-buttons button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+
+  .services-content {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    gap: 2rem;
+    width: 100%;
+  }
+  
+  .left-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem auto;
+  }
+
+  .left-container p {
+    color: #666;
+    text-align: center;
+  }
+  
+  .service-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .service-item {
+    margin-bottom: 1.5rem;
+    color: #666;
+    border-bottom: 0.1px solid rgba(0,0,0,0.1);
+  }
+  
+  .service-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .service-header h3{
+    margin-right: 2rem;
+  }
+  
+  .expand-btn {
+    background: none;
+    border: none;
+    color: #666;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+  
+  .service-info {
+    margin-top: 0.5rem;
+    display: none; /* hidden by default */
+    color:#666;
+  }
+  
+  .right-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* position: relative; */
+    height: 100%;
+  }
+  
+  .right-container img {
+    width: 230px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin: 0 auto;
+    object-fit: cover;
+  }
+
+  /* Position each image */
+.right-container img:nth-child(1) {
+    top: 0;
+    left: 0;
+    transform: rotate(-2.5deg) translateY(25%);
+  }
+  
+  .right-container img:nth-child(2) {
+    top: 20px;
+    left: 80px;
+    transform: rotate(2deg) translateX(50%);
+  }
+  
+  .right-container img:nth-child(3) {
+    top: 140px;
+    left: 40px;
+    transform: rotate(-4deg) translateY(-40%);
+  }

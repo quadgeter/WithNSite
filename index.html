@@ -12,6 +12,7 @@
     }
         }
     </script>
+    <script src="https://kit.fontawesome.com/3f263d7cad.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="./styles.css">
   </head>
   <body>
@@ -38,8 +39,66 @@
       <p>Find out how we can help you capture the essence of your brand through striking visuals and intentional storytelling.</p>
       <button class="cta-main">Get Started</button>
     </div>
-    <div id="threejs-container"></div>
 
+    <div id="services-panel">
+      <h1 style="text-transform:uppercase;color:#666;margin-bottom:1rem;">Our Services</h1>
+      <div class="services-content">
+        <!-- Left Section: Services -->
+        <div class="left-container">
+          <p>We work across a variety of industries including fashion, music, personal brands, corporate events, public and private gatherings, real estate, hospitality, and more. Whether you’re launching a product, telling a story, or building your brand — we help you bring it to life through powerful visuals.</p>
+          <ul class="service-list">
+            <li class="service-item">
+              <div class="service-header">
+                <h3>Photography</h3>
+                <button class="expand-btn">＋</button>
+              </div>
+              <p class="service-info">Capturing professional, creative visuals tailored to your brand.</p>
+            </li>
+            <li class="service-item">
+              <div class="service-header">
+                <h3>Videography</h3>
+                <button class="expand-btn">＋</button>
+              </div>
+              <p class="service-info">Dynamic video coverage for events, brands, and creatives.</p>
+            </li>
+            <li class="service-item">
+              <div class="service-header">
+                <h3>Commercial Production</h3>
+                <button class="expand-btn">＋</button>
+              </div>
+              <p class="service-info">High-end commercial content that elevates your business.</p>
+            </li>
+          </ul>
+        </div>
+    
+        <!-- Right Section: Images -->
+        <div class="right-container">
+          <img src="assets/lookbook/jordan_ferrari.jpeg" />
+          <img src="assets/lookbook/kobe_icebucket.jpeg" />
+          <img src="assets/lookbook/malcomx.jpeg" />
+        </div>
+      </div>
+    
+      <!-- CTA Buttons -->
+      <div class="cta-buttons">
+        <button>Get a Quote</button>
+        <button>Book a Consultation</button>
+      </div>
+    </div>
+    
+    <div id="threejs-container"></div>
+    <script>
+      const buttons = document.querySelectorAll('.expand-btn');
+
+      buttons.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          const info = btn.parentElement.nextElementSibling;
+          info.style.display = info.style.display === 'block' ? 'none' : 'block';
+          btn.textContent = info.style.display === 'block' ? '–' : '＋';
+        });
+      });
+
+    </script>
     <script type="module" src="main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 

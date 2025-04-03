@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
 import { CSS3DRenderer, CSS3DObject } from "https://unpkg.com/three/examples/jsm/renderers/CSS3DRenderer.js";
+import { RGBELoader } from './node_modules/three/examples/jsm/loaders/RGBELoader.js';
+
 
 class App {
     constructor(){
@@ -44,17 +46,25 @@ class App {
         this.controls.enablePan = false;
         this.controls.enableZoom = true;
         
-        const sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-        sunLight.position.set( 2, 0.5, 2);
-        this.scene.add(sunLight);
+        this.sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+        this.sunLight.position.set( 2, 0.5, 2);
+        this.scene.add(this.sunLight);
 
-        this.loader.load('./assets/white_room.jpeg', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping; // Ensures proper HDRI projection
-            texture.colorSpace = THREE.SRGBColorSpace; // Keeps colors accurate
+        // this.loader.load('./assets/blocky_photo_studio_4k.hdr', (texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping; // Ensures proper HDRI projection
+        //     texture.colorSpace = THREE.SRGBColorSpace; // Keeps colors accurate
 
-            this.scene.background = texture;  // Set background to the HDRI
-            this.scene.environment = texture; 
+        //     this.scene.background = texture;  // Set background to the HDRI
+        //     this.scene.environment = texture; 
+        // });
+        const rgbeLoader = new RGBELoader();
+            rgbeLoader.load('./assets/blocky_photo_studio_4k.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            this.scene.background = texture;
+            this.scene.environment = texture;
         });
+
 
         this.states = ["home", "videos", "lookbook", "services", "book", "about"];
 
@@ -115,7 +125,7 @@ class App {
     }
 
     async _loadPlaylistVideos(playlistId) {
-        const API_KEY = '-';
+        const API_KEY = 'AIzaSyCXrPjz9wCr2upv1iXAYwE5AbHP9wirWAo';
         const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`);
         if (!res.ok) return console.error("Failed to load videos");
         const data = await res.json();
@@ -581,18 +591,31 @@ class App {
         });
     }
 
+    _showServicesSection() {
+        const servicesContainer = document.querySelector("#services-panel");
+        servicesContainer.classList.add("shown");
+    }
+
+    _hideServicesSection() {
+        const servicesContainer = document.querySelector("#services-panel");
+        servicesContainer.classList.remove("shown");
+    }
+
     _homeToServicesPage() {
         if (!this.cameraModel) return;
 
+        this._showServicesSection();
         this._hideMainNav();
-
 
     }
 
     _servicesToHome() {
         if (!this.cameraModel) return;
 
+        this._hideServicesSection();
         this._showMainNav();
+
+        gsap.to(sunLight, { intensity: 0.2, duration: 0.5 });
     }
     
 
