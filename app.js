@@ -44,7 +44,7 @@ class App {
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
         this.controls.enablePan = false;
-        this.controls.enableZoom = true;
+        this.controls.enableZoom = false;
         
         this.sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
         this.sunLight.position.set( 2, 0.5, 2);
@@ -57,12 +57,22 @@ class App {
         //     this.scene.background = texture;  // Set background to the HDRI
         //     this.scene.environment = texture; 
         // });
+
         const rgbeLoader = new RGBELoader();
-            rgbeLoader.load('./assets/blocky_photo_studio_4k.hdr', (texture) => {
+            rgbeLoader.load('./assets/studio_small_08_4k.hdr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
 
-            this.scene.background = texture;
             this.scene.environment = texture;
+
+            // ✅ For visible background you can rotate
+            const geometry = new THREE.SphereGeometry(20, 60, 40); // Large enough to enclose the scene
+            geometry.scale(-1, 1, 1); // Invert the sphere to view from inside
+
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const backgroundSphere = new THREE.Mesh(geometry, material);
+
+            backgroundSphere.rotation.y = Math.PI; // Rotate it if needed
+            this.scene.add(backgroundSphere);
         });
 
 
@@ -88,10 +98,11 @@ class App {
                 c.receiveShadow = false;
             });
             gltf.scene.position.x = 0.13;
+            gltf.scene.position.y = -0.025
             this.cameraModel = gltf.scene;
             this.cameraModel.scale.set(1.25, 1.4, 1.25);
-            const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
-            this.cameraModel.add(axesHelper);
+            // const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
+            // this.cameraModel.add(axesHelper);
 
             const screenMarker = new THREE.Object3D();
             screenMarker.name = "screenMarker";
@@ -325,6 +336,21 @@ class App {
         }
     }
 
+    // General-purpose FOV animation
+    _animateFOV(targetFOV, duration = 0.5) {
+        const cam = this.camera;
+        gsap.to({ fov: cam.fov }, {
+        fov: targetFOV,
+        duration,
+        ease: "power2.out",
+        onUpdate: function () {
+            cam.fov = this.targets()[0].fov;
+            cam.updateProjectionMatrix();
+        }
+        });
+    }
+  
+
     _homeToVideoPage() {
         if (!this.cameraModel) return;
     
@@ -337,15 +363,15 @@ class App {
         }
 
         gsap.to(this.cameraModel.position, {
-            x: 0.015, // Move to X = 0
-            y: 0.02, // Move up slightly
+            x: 0.013, // Move to X = 0
+            y: 0.00, // Move up slightly
             z: 0.105, // Move backward
             duration: 0.5,
             ease: "power2.out"
         });
-    
+
         gsap.to(this.cameraModel.rotation, {
-            y: -1.8, // Rotate to face forward
+            y: -1.9, // Rotate to face forward
             x: 0.135,
             z: 0.2,
             duration: 0.5,
@@ -357,7 +383,7 @@ class App {
 
         gsap.to(this.camera.position, {
             x: 0.3,  // Adjust based on your scene
-            y: 0.16, // Raise the camera slightly
+            y: 0.155, // Raise the camera slightly
             z: 0.175,  // Move closer or further
             duration: 0.5,
             ease: "power2.out",
@@ -366,12 +392,18 @@ class App {
             }
         });
 
+        const cam = this.camera;
+
+        this._animateFOV(65);
+
+
     }
 
     _videoToHomePage() {
         if (!this.cameraModel) return;
 
         this._showMainNav();
+        this._animateFOV(75);
 
         const backBtn = document.getElementById("back-btn");
         if (backBtn) {
@@ -380,8 +412,8 @@ class App {
         }
         
         gsap.to(this.cameraModel.position, {
-            x: 0.10,
-            y: 0,
+            x: 0.13,
+            y: -0.025,
             z: 0,
             duration: 0.5,
             ease: "power2.out"
@@ -443,33 +475,33 @@ class App {
         img.style.borderRadius = "24px";
         wrapperDiv.appendChild(img);
 
-        const left = document.createElement("button");
-        const leftButtonImg = document.createElement("img");
-        leftButtonImg.src = "./assets/left-chevron.png";
-        left.appendChild(leftButtonImg);
-        left.style.position = "absolute";
-        left.style.left = "20px";
-        left.style.top = "50%";
-        left.style.transform = "translateY(-50%)";
-        left.style.fontSize = "2rem";
-        left.style.background = "transparent";
-        left.style.color = "#939393";
-        left.style.border = "none";
-        left.style.cursor = "pointer";
+        const left = document.querySelector(".left-btn");
+        // const leftButtonImg = document.createElement("img");
+        // leftButtonImg.src = "./assets/left-chevron.png";
+        // left.appendChild(leftButtonImg);
+        // left.style.position = "absolute";
+        // left.style.left = "20px";
+        // left.style.top = "50%";
+        // left.style.transform = "translateY(-50%)";
+        // left.style.fontSize = "2rem";
+        // left.style.background = "transparent";
+        // left.style.color = "#939393";
+        // left.style.border = "none";
+        // left.style.cursor = "pointer";
 
-        const right = document.createElement("button");
-        const rightButtonImg = document.createElement("img");
-        rightButtonImg.src = "./assets/chevron.png";
-        right.appendChild(rightButtonImg);
-        right.style.position = "absolute";
-        right.style.right = "20px";
-        right.style.top = "50%";
-        right.style.transform = "translateY(-50%)";
-        right.style.fontSize = "2rem";
-        right.style.background = "transparent";
-        right.style.color = "#939393";
-        right.style.border = "none";
-        right.style.cursor = "pointer";
+        const right = document.querySelector(".right-btn");
+        // const rightButtonImg = document.createElement("img");
+        // rightButtonImg.src = "./assets/chevron.png";
+        // right.appendChild(rightButtonImg);
+        // right.style.position = "absolute";
+        // right.style.right = "20px";
+        // right.style.top = "50%";
+        // right.style.transform = "translateY(-50%)";
+        // right.style.fontSize = "2rem";
+        // right.style.background = "transparent";
+        // right.style.color = "#939393";
+        // right.style.border = "none";
+        // right.style.cursor = "pointer";
 
         left.onclick = () => {
             currentIndex = (currentIndex - 1 + images.length) % images.length;
@@ -480,8 +512,8 @@ class App {
             img.src = images[currentIndex];
         };
 
-        wrapperDiv.appendChild(left);
-        wrapperDiv.appendChild(right);
+        // wrapperDiv.appendChild(left);
+        // wrapperDiv.appendChild(right);
         
         const lookBookObject = new CSS3DObject(wrapperDiv);
         lookBookObject.scale.set(1,1,1);
@@ -511,24 +543,24 @@ class App {
         this._showLookbookBtns();
     
         gsap.to(this.cameraModel.position, {
-            x: 0.01,
+            x: -0.25,
             z: -0.15,
-            y: -0.125,
+            y: -0.20,
             duration: 0.5,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.scale, {
-            x: 2.5,
-            y: 2.5,
-            z: 2.5,
+            x: 3.0,
+            y: 3.0,
+            z: 3.0,
             duration: 0.5,
             ease: "power2.out" 
         });
 
         gsap.to(this.cameraModel.rotation, {
             x: -0.02,
-            y: -2.225,
+            y: -2.210,
             z: -0.025,
             duration: 0.5,
             ease: "power2.out",
@@ -556,8 +588,8 @@ class App {
         this._hideLookbookBtns();
 
         gsap.to(this.cameraModel.position, {
-            x: 0.10,
-            y: 0,
+            x: 0.13,
+            y: -0.025,
             z: 0,
             duration: 0.5,
             ease: "power2.out"

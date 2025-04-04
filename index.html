@@ -20,7 +20,7 @@
     <button id="back-btn">Back</button>
     <nav id="main-nav">
         <ul>
-            <li><button class="nav-btn" href="/"><img src="./assets/Quadglobal-FF-01 1 (1).png"></button></li>
+            <li><button class="nav-btn"><img src="./assets/WithNSiteLogo.png"></button></li>
             <li><button class="nav-btn"><p>Videos</p></button></li>
             <li><button class="nav-btn"><p>Lookbook</p></button></li>
             <li><button href="./services.html" class="nav-btn"><p>Services</p></button></li>
@@ -35,13 +35,15 @@
       </div>
     </div>
     <div class="lookbook-container">
-      <h2 class="lookbook-title">Lookbook</h2>
+      <!-- <h2 class="lookbook-title">Lookbook</h2>
       <p>Find out how we can help you capture the essence of your brand through striking visuals and intentional storytelling.</p>
-      <button class="cta-main">Get Started</button>
+      <button class="cta-main">Get Started</button> -->
+      <button class="left-btn"><img src="./assets/left-chevron.png"></button>
+      <button class="right-btn"><img src="./assets/chevron.png"></button>
     </div>
 
     <div id="services-panel">
-      <h1 style="text-transform:uppercase;color:#666;margin-bottom:1rem;">Our Services</h1>
+      <h1 style="text-transform:uppercase;color:#333;margin-bottom:1rem;">Our Services</h1>
       <div class="services-content">
         <!-- Left Section: Services -->
         <div class="left-container">
@@ -52,21 +54,37 @@
                 <h3>Photography</h3>
                 <button class="expand-btn">＋</button>
               </div>
-              <p class="service-info">Capturing professional, creative visuals tailored to your brand.</p>
+              <ul class="service-info">
+                <li class="services-info-item">Fashion and lifestyle</li>
+                <li class="services-info-item">Product photography</li>
+                <li class="services-info-item">Event photography</li>
+                <li class="services-info-item">Portrait Sessions</li>
+                <li class="services-info-item">Branding photography (individuals, creatives, businesses)</li>
+              </ul>
             </li>
             <li class="service-item">
               <div class="service-header">
                 <h3>Videography</h3>
                 <button class="expand-btn">＋</button>
               </div>
-              <p class="service-info">Dynamic video coverage for events, brands, and creatives.</p>
+              <ul class="service-info">
+                <li class="services-info-item">Public and private event coverage</li>
+                <li class="services-info-item">Interviews</li>
+                <li class="services-info-item">Documentaries</li>
+                <li class="services-info-item">Music Videos/li>
+                <li class="services-info-item">Short films</li>
+                <li class="services-info-item">B-roll production</li>
+              </ul>
             </li>
             <li class="service-item">
               <div class="service-header">
                 <h3>Commercial Production</h3>
                 <button class="expand-btn">＋</button>
               </div>
-              <p class="service-info">High-end commercial content that elevates your business.</p>
+              <ul class="service-info">
+                <li class="services-info-item">Web video, social media content and advertisements</li>
+                <li class="services-info-item">Commercial video and editing</li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -87,6 +105,14 @@
     </div>
     
     <div id="threejs-container"></div>
+    <div class="footer">
+      <div class="socials">
+        <a href="https://www.instagram.com/withnsite/" target="_blank" class="footer-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.instagram.com/withnsite/" target="_blank" class="footer-link"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://www.instagram.com/withnsite/" target="_blank" class="footer-link"><i class="fa-brands fa-tiktok"></i></a>
+      </div>
+      <!-- <p class="copyright">© WithNSite 2025</p> -->
+    </div>
     <script>
       const buttons = document.querySelectorAll('.expand-btn');
 
