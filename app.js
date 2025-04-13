@@ -32,12 +32,12 @@ class App {
         this.cssRenderer.domElement.style.zIndex = "10";
         container.appendChild(this.cssRenderer.domElement);
         
-        const fov = 75;
+        const fov = 85;
         const aspect = width / height;
         const near = 0.1;
-        const far = 100;
+        const far = 1000;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-        this.camera.position.set(0.25, 0.15, 0.25);
+        this.camera.position.set(1.25, 0, 1);
         
         this.scene = new THREE.Scene();
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -45,35 +45,36 @@ class App {
         this.controls.dampingFactor = 0.05;
         this.controls.enablePan = false;
         this.controls.enableZoom = false;
+
         
         this.sunLight = new THREE.HemisphereLight(0xffffff, 0x444444);
         this.sunLight.position.set( 2, 0.5, 2);
         this.scene.add(this.sunLight);
 
-        // this.loader.load('./assets/blocky_photo_studio_4k.hdr', (texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping; // Ensures proper HDRI projection
-        //     texture.colorSpace = THREE.SRGBColorSpace; // Keeps colors accurate
-
-        //     this.scene.background = texture;  // Set background to the HDRI
-        //     this.scene.environment = texture; 
-        // });
-
-        const rgbeLoader = new RGBELoader();
-            rgbeLoader.load('./assets/studio_small_08_4k.hdr', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-
+        this.loader.load('./assets/whitestudio.jpeg', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping; // Ensures proper HDRI projection
+            texture.colorSpace = THREE.SRGBColorSpace; // Keeps colors accurate
+            this.scene.background = texture;
             this.scene.environment = texture;
-
-            // ✅ For visible background you can rotate
-            const geometry = new THREE.SphereGeometry(20, 60, 40); // Large enough to enclose the scene
-            geometry.scale(-1, 1, 1); // Invert the sphere to view from inside
-
-            const material = new THREE.MeshBasicMaterial({ map: texture });
-            const backgroundSphere = new THREE.Mesh(geometry, material);
-
-            backgroundSphere.rotation.y = Math.PI; // Rotate it if needed
-            this.scene.add(backgroundSphere);
         });
+
+
+        // const rgbeLoader = new RGBELoader();
+        //     rgbeLoader.load('./assets/studio_small_08_4k.hdr', (texture) => {
+        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+
+        //     this.scene.environment = texture;
+
+        //     // ✅ For visible background you can rotate
+        //     const geometry = new THREE.SphereGeometry(20, 60, 40); // Large enough to enclose the scene
+        //     geometry.scale(-1, 1, 1); // Invert the sphere to view from inside
+
+        //     const material = new THREE.MeshBasicMaterial({ map: texture });
+        //     const backgroundSphere = new THREE.Mesh(geometry, material);
+
+        //     backgroundSphere.rotation.y = Math.PI + 0.75; // Rotate it if needed
+        //     this.scene.add(backgroundSphere);
+        // });
 
 
         this.states = ["home", "videos", "lookbook", "services", "book", "about"];
@@ -86,23 +87,26 @@ class App {
         this._setupNavButtons();
         this._loadPlaylistVideos("PLTo6svdhIL1cxS4ffGueFpVCF756ip-ab");
         this._RAF();
+
+        this.controls.target.set(100,-10,0); // or wherever you want it to look
+        this.controls.update();
         
     }
 
      
     _LoadModel() { 
         const loader = new GLTFLoader();
-        loader.load('./assets/models/canon-camera.gltf', (gltf) => { 
+        loader.load('./assets/models/unbranded_camera.gltf', (gltf) => { 
             gltf.scene.traverse(c => {
                 c.castShadow = false;
                 c.receiveShadow = false;
             });
-            gltf.scene.position.x = 0.13;
-            gltf.scene.position.y = -0.025
+            gltf.scene.position.set(75 , -30, 30);
+            gltf.scene.rotation.y = -Math.PI + 0.75;
             this.cameraModel = gltf.scene;
-            this.cameraModel.scale.set(1.25, 1.4, 1.25);
-            // const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
-            // this.cameraModel.add(axesHelper);
+            this.cameraModel.scale.set(320, 350, 320);
+            const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
+            this.cameraModel.add(axesHelper);
 
             const screenMarker = new THREE.Object3D();
             screenMarker.name = "screenMarker";
@@ -294,7 +298,7 @@ class App {
                 break;
             case "lookbook":
                 console.log(`Switching to Lookbook page ${current}`);
-                this.controls.enabled = false;
+                // this.controls.enabled = false;
                 this._homeToLookbookPage();
                 break;
             default:
@@ -363,17 +367,14 @@ class App {
         }
 
         gsap.to(this.cameraModel.position, {
-            x: 0.013, // Move to X = 0
-            y: 0.00, // Move up slightly
-            z: 0.105, // Move backward
+            x: 75,
+            z: -20, 
             duration: 0.5,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.rotation, {
-            y: -1.9, // Rotate to face forward
-            x: 0.135,
-            z: 0.2,
+            y: -Math.PI * 1.4, // Rotate to face forward
             duration: 0.5,
             ease: "power2.out",
             onComplete: () => {
@@ -399,31 +400,28 @@ class App {
 
     }
 
-    _videoToHomePage() {
-        if (!this.cameraModel) return;
-
-        this._showMainNav();
-        this._animateFOV(75);
-
-        const backBtn = document.getElementById("back-btn");
-        if (backBtn) {
-            backBtn.classList.remove("shown");
-            console.log("back button hidden");
-        }
-        
+    _resetCamera(){
         gsap.to(this.cameraModel.position, {
-            x: 0.13,
-            y: -0.025,
-            z: 0,
-            duration: 0.5,
+            x: 75,
+            y: -30,
+            z: 30,
+            duration: 0.75,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.rotation, {
-            y: 0,
             x: 0,
+            y: -Math.PI + 0.75,
             z: 0,
-            duration: 0.5,
+            duration: 0.75,
+            ease: "power2.out"
+        });
+
+        gsap.to(this.cameraModel.scale, {
+            x: 320,
+            y: 350,
+            z: 320,
+            duration: 0.75,
             ease: "power2.out"
         });
         
@@ -439,6 +437,26 @@ class App {
         });
     }
 
+    _videoToHomePage() {
+        if (!this.cameraModel) return;
+
+        this._showMainNav();
+        this._animateFOV(75);
+
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+            backBtn.classList.remove("shown");
+            console.log("back button hidden");
+        }
+
+        // gltf.scene.position.set(75 , -30, 30);
+        //     gltf.scene.rotation.y = -Math.PI + 0.75;
+        //     this.cameraModel = gltf.scene;
+        //     this.cameraModel.scale.set(320, 350, 320);
+        
+        this._resetCamera();
+    }
+
     _showLookbookBtns() {
         const lookbookContainer = document.querySelector(".lookbook-container");
         lookbookContainer.classList.add("shown");
@@ -451,87 +469,160 @@ class App {
         console.log("Lookbook buttons hidden");
     }
 
-    _addLookbookToCamera() {
-        const wrapperDiv = document.createElement("div");
-        wrapperDiv.style.width = "1200px";
-        wrapperDiv.style.height = "800px";
-        wrapperDiv.style.overflow = "hidden";
-        wrapperDiv.style.position = "relative";
-
+    _createLookBook() {
+        const left = document.querySelector(".left-btn");
+        const right = document.querySelector(".right-btn");
+    
+        let currentIndex = 0;
+        const imagesPerPage = 6;
+    
         const images = [
             "./assets/lookbook/jordan_ferrari.jpeg",
             "./assets/lookbook/kobe_icebucket.jpeg",
             "./assets/lookbook/malcomx.jpeg",
-            "assets/lookbook/martinluther.jpeg"
+            "./assets/lookbook/martinluther.jpeg",
+            "./assets/lookbook/jordan_ferrari.jpeg",
+            "./assets/lookbook/kobe_icebucket.jpeg",
+            "./assets/lookbook/malcomx.jpeg",
+            "./assets/lookbook/martinluther.jpeg",
+            "./assets/lookbook/jordan_ferrari.jpeg",
+            "./assets/lookbook/kobe_icebucket.jpeg",
+            "./assets/lookbook/malcomx.jpeg",
+            "./assets/lookbook/martinluther.jpeg",
         ];
 
-        let currentIndex = 0;
+        const outer = document.createElement("div");
+        outer.style.width = "960px";
+        outer.style.height = "640px";
+        outer.style.backgroundColor = "#transparent";
+        outer.style.overflow = "hidden"; // keep it tidy
+        outer.style.display = "flex";
+        outer.style.alignItems = "center";
+        outer.style.justifyContent = "center";
 
-        const img = document.createElement("img");
-        img.src = images[currentIndex];
-        img.style.width = "100%";
-        img.style.height = "100%";
-        img.style.objectFit = "cover";
-        img.style.borderRadius = "24px";
-        wrapperDiv.appendChild(img);
+        // inner grid container
+        const grid = document.createElement("div");
+        grid.style.display = "grid";
+        grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+        grid.style.gridTemplateRows = "repeat(2, 1fr)";
+        grid.style.gap = "20px";
+        grid.style.width = "920px"; // slightly less for padding
+        grid.style.height = "600px";
+        grid.style.padding = "10px";
+        grid.style.boxSizing = "border-box";
 
-        const left = document.querySelector(".left-btn");
-        // const leftButtonImg = document.createElement("img");
-        // leftButtonImg.src = "./assets/left-chevron.png";
-        // left.appendChild(leftButtonImg);
-        // left.style.position = "absolute";
-        // left.style.left = "20px";
-        // left.style.top = "50%";
-        // left.style.transform = "translateY(-50%)";
-        // left.style.fontSize = "2rem";
-        // left.style.background = "transparent";
-        // left.style.color = "#939393";
-        // left.style.border = "none";
-        // left.style.cursor = "pointer";
+        outer.appendChild(grid);
 
-        const right = document.querySelector(".right-btn");
-        // const rightButtonImg = document.createElement("img");
-        // rightButtonImg.src = "./assets/chevron.png";
-        // right.appendChild(rightButtonImg);
-        // right.style.position = "absolute";
-        // right.style.right = "20px";
-        // right.style.top = "50%";
-        // right.style.transform = "translateY(-50%)";
-        // right.style.fontSize = "2rem";
-        // right.style.background = "transparent";
-        // right.style.color = "#939393";
-        // right.style.border = "none";
-        // right.style.cursor = "pointer";
+        const renderImages = () => {
+            grid.innerHTML = "";
+            const visibleImages = images.slice(currentIndex, currentIndex + imagesPerPage);
 
+            visibleImages.forEach(src => {
+                const frame = document.createElement("div");
+                frame.style.width = "100%";
+                frame.style.height = "100%";
+                frame.style.maxWidth = "220px";
+                frame.style.maxHeight = "220px";
+                frame.style.border = "6px solid #2c2c2c";
+                frame.style.background = "#fff";
+                frame.style.borderRadius = "12px";
+                frame.style.boxShadow = "0 6px 10px rgba(0,0,0,0.6)";
+                frame.style.display = "flex";
+                frame.style.alignItems = "center";
+                frame.style.justifyContent = "center";
+                frame.style.overflow = "hidden";
+                frame.style.cursor = "pointer";
+                frame.style.transition = "transform 0.3s ease";
+
+                const img = document.createElement("img");
+                img.src = src;
+                img.style.width = "100%";
+                img.style.height = "100%";
+                img.style.objectFit = "cover";
+                img.style.borderRadius = "6px";
+
+                frame.appendChild(img);
+                grid.appendChild(frame);
+
+                // Enlarge on click
+                frame.onclick = () => {
+                    const overlay = document.createElement("div");
+                    overlay.style.position = "fixed";
+                    overlay.style.top = "0";
+                    overlay.style.left = "0";
+                    overlay.style.width = "100vw";
+                    overlay.style.height = "100vh";
+                    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                    overlay.style.display = "flex";
+                    overlay.style.alignItems = "center";
+                    overlay.style.justifyContent = "center";
+                    overlay.style.zIndex = "9999";
+
+                    const enlarged = document.createElement("img");
+                    enlarged.src = src;
+                    enlarged.style.maxWidth = "90vw";
+                    enlarged.style.maxHeight = "90vh";
+                    enlarged.style.borderRadius = "16px";
+                    enlarged.style.boxShadow = "0 0 20px rgba(0, 0, 0, 0.5)";
+                    enlarged.style.objectFit = "contain";
+
+                    const close = document.createElement("button");
+                    close.innerText = "×";
+                    close.style.position = "absolute";
+                    close.style.top = "20px";
+                    close.style.right = "30px";
+                    close.style.fontSize = "3rem";
+                    close.style.color = "#fff";
+                    close.style.background = "transparent";
+                    close.style.border = "none";
+                    close.style.cursor = "pointer";
+                    close.onclick = () => document.body.removeChild(overlay);
+
+                    overlay.appendChild(enlarged);
+                    overlay.appendChild(close);
+                    document.body.appendChild(overlay);
+                };
+            });
+        };
+    
+        // Init render
+        renderImages();
+    
+        // Left/Right button logic
         left.onclick = () => {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            img.src = images[currentIndex];
+            currentIndex = (currentIndex - imagesPerPage + images.length) % images.length;
+            renderImages();
         };
+    
         right.onclick = () => {
-            currentIndex = (currentIndex + 1) % images.length;
-            img.src = images[currentIndex];
+            currentIndex = (currentIndex + imagesPerPage) % images.length;
+            renderImages();
         };
+    
+        // Optional: add swipe support for mobile
+        let startX = null;
+        outer.addEventListener("touchstart", (e) => startX = e.touches[0].clientX);
+        outer.addEventListener("touchend", (e) => {
+            if (startX === null) return;
+            const deltaX = e.changedTouches[0].clientX - startX;
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX > 0) left.onclick();
+                else right.onclick();
+            }
+            startX = null;
+        });
 
-        // wrapperDiv.appendChild(left);
-        // wrapperDiv.appendChild(right);
-        
-        const lookBookObject = new CSS3DObject(wrapperDiv);
-        lookBookObject.scale.set(1,1,1);
-
-        const marker = this.cameraModel.getObjectByName("screenMarker");
-        if (marker) {
-            marker.add(lookBookObject);
-        } else {
-            console.log("ERROR, marker not found");
-        }
-        this.lookBookObject = lookBookObject;
+        this.lookBookObject = new CSS3DObject(outer);
+        this.lookBookObject.scale.set(0.1, 0.1, 0.1); // tweak for your scene
+        this.lookBookObject.rotation.y = -Math.PI / 2;
+        this.lookBookObject.position.set(60,-3,2.5)
+        this.scene.add(this.lookBookObject);
     }
+    
 
     _removeLookbookPage() {
-        const marker = this.cameraModel.getObjectByName("screenMarker");
-
-        if (marker && this.cameraModel) {
-            marker.remove(this.lookBookObject);
+        if (this.lookBookObject ) {
+            this.scene.remove(this.lookBookObject);
             this.lookBookObject = null;
         }
     }
@@ -565,20 +656,22 @@ class App {
             duration: 0.5,
             ease: "power2.out",
         });
+
+        this._createLookBook();
     
-        gsap.to(this.camera.position, {
-            x: 0.35,
-            y: 0.15,
-            z: 0.25,
-            duration: 0.5,
-            ease: "power2.out",
-            onUpdate: () => {
-                this.camera.lookAt(this.cameraModel.position);
-            },
-            onComplete: () => {
-                this._addLookbookToCamera();
-            }
-        });
+        // gsap.to(this.camera.position, {
+        //     x: 0.35,
+        //     y: 0.15,
+        //     z: 0.25,
+        //     duration: 0.5,
+        //     ease: "power2.out",
+        //     onUpdate: () => {
+        //         this.camera.lookAt(this.cameraModel.position);
+        //     },
+        //     onComplete: () => {
+        //         this._createLookBook();
+        //     }
+        // });
     }
 
     _lookbookToHome(){
@@ -587,40 +680,7 @@ class App {
         this._showMainNav();
         this._hideLookbookBtns();
 
-        gsap.to(this.cameraModel.position, {
-            x: 0.13,
-            y: -0.025,
-            z: 0,
-            duration: 0.5,
-            ease: "power2.out"
-        });
-
-        gsap.to(this.cameraModel.rotation, {
-            y: 0,
-            x: 0,
-            z: 0,
-            duration: 0.5,
-            ease: "power2.out"
-        });
-
-        gsap.to(this.cameraModel.scale, {
-            x: 1.25,
-            y: 1.25,
-            z: 1.25,
-            duration: 0.5,
-            ease: "power2.out",
-        });
-
-        gsap.to(this.camera.position, {
-            x: 0.25,
-            y: 0.15,
-            z: 0.25,
-            duration: 0.5,
-            ease: "power2.out",
-            onUpdate: () => {
-                this.camera.lookAt(this.cameraModel.position);
-            }
-        });
+        this._resetCamera();
     }
 
     _showServicesSection() {
@@ -647,7 +707,7 @@ class App {
         this._hideServicesSection();
         this._showMainNav();
 
-        gsap.to(sunLight, { intensity: 0.2, duration: 0.5 });
+        gsap.to(this.sunLight, { intensity: 0.2, duration: 0.5 });
     }
     
 
