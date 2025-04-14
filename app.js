@@ -90,6 +90,8 @@ class App {
 
         this.controls.target.set(100,-10,0); // or wherever you want it to look
         this.controls.update();
+
+        gsap.registerPlugin(CustomEase) 
         
     }
 
@@ -265,6 +267,7 @@ class App {
     _updateScene(current) {
         switch (this.pageState) {
             case "home":
+                this._showFooter();
                 switch (current) {
                     case "videos":
                         this.controls.enabled = true;
@@ -289,16 +292,19 @@ class App {
             case "videos":
                 console.log(`Switching to Videos page ${current}`);
                 this.controls.enabled = false;
+                this._hideFooter();
                 this._homeToVideoPage();
                 break;
             case "services":
                 console.log(`Switching to Services page ${current}`);
                 this.controls.enabled = false;
+                this._hideFooter();
                 this._homeToServicesPage();
                 break;
             case "lookbook":
                 console.log(`Switching to Lookbook page ${current}`);
-                // this.controls.enabled = false;
+                this.controls.enabled = false;
+                this._hideFooter();
                 this._homeToLookbookPage();
                 break;
             default:
@@ -327,16 +333,42 @@ class App {
             console.log("playlist hidden");
         }
 
+        const mainNav = document.getElementById("main-nav");
+        if (mainNav) {
+            mainNav.classList.remove("hidden");
+            console.log("Main Nav shown");
+        }
+    }
+
+    _hideBackBtn() {
         const backBtn = document.getElementById("back-btn");
         if (backBtn) {
             backBtn.classList.remove("shown");
             console.log("back button hidden");
         }
+    }
 
-        const mainNav = document.getElementById("main-nav");
-        if (mainNav) {
-            mainNav.classList.remove("hidden");
-            console.log("Main Nav shown");
+    _showBackBtn() {
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+            backBtn.classList.add("shown");
+            console.log("back button hidden");
+        }
+    }
+
+    _hideFooter() {
+        const footer = document.querySelector(".footer");
+        if (footer) {
+            footer.classList.add("hidden");
+            console.log("footer hidden");
+        }
+    }
+
+    _showFooter() {
+        const footer = document.querySelector(".footer");
+        if (footer) {
+            footer.classList.remove("hidden");
+            console.log("footer hidden");
         }
     }
 
@@ -359,6 +391,7 @@ class App {
         if (!this.cameraModel) return;
     
         this._hideMainNav();
+        this._showBackBtn();
 
         const playListContainer = document.getElementById("playlist-container");
         if (playListContainer) {
@@ -400,7 +433,7 @@ class App {
 
     }
 
-    _resetCamera(){
+    _resetScene(){
         gsap.to(this.cameraModel.position, {
             x: 75,
             y: -30,
@@ -441,6 +474,7 @@ class App {
         if (!this.cameraModel) return;
 
         this._showMainNav();
+        this._hideBackBtn();
         this._animateFOV(75);
 
         const backBtn = document.getElementById("back-btn");
@@ -454,7 +488,7 @@ class App {
         //     this.cameraModel = gltf.scene;
         //     this.cameraModel.scale.set(320, 350, 320);
         
-        this._resetCamera();
+        this._resetScene();
     }
 
     _showLookbookBtns() {
@@ -631,47 +665,117 @@ class App {
         if (!this.cameraModel) return;
 
         this._hideMainNav();
-        this._showLookbookBtns();
-    
-        gsap.to(this.cameraModel.position, {
-            x: -0.25,
-            z: -0.15,
-            y: -0.20,
-            duration: 0.5,
-            ease: "power2.out"
-        });
 
-        gsap.to(this.cameraModel.scale, {
-            x: 3.0,
-            y: 3.0,
-            z: 3.0,
-            duration: 0.5,
-            ease: "power2.out" 
-        });
+        const duration = 0.75;
 
-        gsap.to(this.cameraModel.rotation, {
-            x: -0.02,
-            y: -2.210,
-            z: -0.025,
-            duration: 0.5,
-            ease: "power2.out",
-        });
-
-        this._createLookBook();
-    
+        // Step 1: Rotate the model to face the viewer
+        // gsap.to(this.cameraModel.rotation, {
+            
+        //     y: -4.7,
+        //     z: -0.025,
+        //     duration: 0.3,
+        //     ease: "power2.inOut",
+        // });
+        // gsap.to(this.cameraModel.position, {
+        //     x: 90,
+        //     y:-40,
+        //     z: 0,
+        //     duration: 0.3,
+        //     ease: "power2.inOut"
+        // });
         // gsap.to(this.camera.position, {
-        //     x: 0.35,
-        //     y: 0.15,
-        //     z: 0.25,
-        //     duration: 0.5,
-        //     ease: "power2.out",
+        //     x: .30,  // Adjust based on your scene
+        //     y: .155, // Raise the camera slightly
+        //     z: .175,  // Move closer or further
+        //     duration: 0.3,
+        //     ease: "power2.inOut",
         //     onUpdate: () => {
-        //         this.camera.lookAt(this.cameraModel.position);
-        //     },
-        //     onComplete: () => {
-        //         this._createLookBook();
+        //         this.camera.lookAt(this.cameraModel.position); // Keep looking at the model
         //     }
         // });
+
+
+        // // Step 2: Move it toward the camera
+        // setTimeout(() => {
+        //     gsap.to(this.cameraModel.position, {
+        //         x: -50,
+        //         y: -50,
+        //         z: 0.8,
+        //         duration: 1.5,
+        //         ease: "power2.in"
+        //     });
+    
+        //     // Step 3: Optional zoom effect by slightly scaling it up
+        //     gsap.to(this.cameraModel.scale, {
+        //         x: 360,
+        //         y: 390,
+        //         z: 360,
+        //         duration: 1.5,
+        //         ease: "power2.in",
+        //         onComplete: () => {
+        //             this._createLookBook();
+        //         }
+        //     });
+        // }, 300)
+
+        // // Step 4: Fade in the "film" overlay
+        // setTimeout(() => {
+        //     this.filmOverlay.style.opacity = "0.9";
+        // }, duration * 1000 - 500); // Begin fade just before movement ends
+
+        const tl = gsap.timeline({
+            ease: "power2.in"
+        });
+
+        tl.to(this.camera.position, {
+            x: 0.25,
+            y: 0.15,
+            z: 0.25,
+            duration: 0.5,
+            onUpdate: () => {
+                this.camera.lookAt(this.cameraModel);
+            }
+        }, 0);
+        
+        // First movement: rotation
+        tl.to(this.cameraModel.rotation, {
+            y: -4.75,
+            z: -0.025,
+            duration: 0.25,
+        }, "-=0.2"); // start at time 0
+        
+        // Second movement: position (starts slightly before rotation ends)
+        tl.to(this.cameraModel.position, {
+            x: 90,
+            y: -40,
+            z: 0,
+            duration: 0.3,
+        }, "-=0.3"); // starts 0.3s *before* previous ends
+
+        tl.to(this.cameraModel.position, {
+            x: -50,
+            y: -50,
+            z: 0.8,
+            duration: 1.5,
+            ease: "slow(0.7, 0.7, false)",
+        }, "-=0.125");
+
+        
+        // Optional: fade in film overlay after motion
+        tl.to(this.filmOverlay, {
+            opacity: 0.9
+        }, "-=0.4"); // begin fade before movement ends
+        
+        // Final step: show lookbook
+        tl.call(() => {
+            this._createLookBook();
+            this._showLookbookBtns();
+        }, null, "-=0.5");
+        
+        tl.call(() => {
+            this._showBackBtn();
+        }, null, "+=3");
+
     }
 
     _lookbookToHome(){
@@ -679,8 +783,9 @@ class App {
 
         this._showMainNav();
         this._hideLookbookBtns();
+        this._hideBackBtn();
 
-        this._resetCamera();
+        this._resetScene();
     }
 
     _showServicesSection() {

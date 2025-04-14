@@ -104,7 +104,7 @@ body {
     font-size: 3rem;
     font-weight: 700;
     text-shadow: 0 2px 2px #666;
-    transition: opacity 0.5s;
+    transition: opacity 0.75s;
     transition: transform 0.1s ease-in-out;
     transform-origin: left center;
     margin: 1rem;
@@ -478,6 +478,12 @@ body {
     padding: 1rem;
     font-size: 1rem;
     z-index: 1000;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .footer.hidden {
+    opacity: 0;
+    z-index: -1;
   }
 
   .socials i{
