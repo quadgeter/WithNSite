@@ -318,21 +318,9 @@ class App {
             mainNav.classList.add("hidden");
             console.log("Main Nav hidden");
         }
-
-        const backBtn = document.getElementById("back-btn");
-        if (backBtn) {
-            backBtn.classList.add("shown");
-            console.log("back button shown");
-        }
     }
 
     _showMainNav() {
-        const playListContainer = document.getElementById("playlist-container");
-        if (playListContainer) {
-            playListContainer.classList.remove("shown");
-            console.log("playlist hidden");
-        }
-
         const mainNav = document.getElementById("main-nav");
         if (mainNav) {
             mainNav.classList.remove("hidden");
@@ -352,7 +340,7 @@ class App {
         const backBtn = document.getElementById("back-btn");
         if (backBtn) {
             backBtn.classList.add("shown");
-            console.log("back button hidden");
+            console.log("back button shown");
         }
     }
 
@@ -372,17 +360,33 @@ class App {
         }
     }
 
+    _showPlaylist(){
+        const playListContainer = document.getElementById("playlist-container");
+        if (playListContainer) {
+            playListContainer.classList.add("shown");
+            console.log("playlist shown");
+        }
+    }
+
+    _hidePlaylist(){
+        const playListContainer = document.getElementById("playlist-container");
+        if (playListContainer) {
+            playListContainer.classList.remove("shown");
+            console.log("playlist hidden");
+        }
+    }
+
     // General-purpose FOV animation
     _animateFOV(targetFOV, duration = 0.5) {
         const cam = this.camera;
         gsap.to({ fov: cam.fov }, {
-        fov: targetFOV,
-        duration,
-        ease: "power2.out",
-        onUpdate: function () {
-            cam.fov = this.targets()[0].fov;
-            cam.updateProjectionMatrix();
-        }
+            fov: targetFOV,
+            duration,
+            ease: "power2.out",
+            onUpdate: function () {
+                cam.fov = this.targets()[0].fov;
+                cam.updateProjectionMatrix();
+            }
         });
     }
   
@@ -392,12 +396,7 @@ class App {
     
         this._hideMainNav();
         this._showBackBtn();
-
-        const playListContainer = document.getElementById("playlist-container");
-        if (playListContainer) {
-            playListContainer.classList.add("shown");
-            console.log("playlist shown");
-        }
+        this._showPlaylist();
 
         gsap.to(this.cameraModel.position, {
             x: 75,
@@ -426,11 +425,7 @@ class App {
             }
         });
 
-        const cam = this.camera;
-
         this._animateFOV(65);
-
-
     }
 
     _resetScene(){
@@ -475,19 +470,8 @@ class App {
 
         this._showMainNav();
         this._hideBackBtn();
+        this._hidePlaylist();
         this._animateFOV(75);
-
-        const backBtn = document.getElementById("back-btn");
-        if (backBtn) {
-            backBtn.classList.remove("shown");
-            console.log("back button hidden");
-        }
-
-        // gltf.scene.position.set(75 , -30, 30);
-        //     gltf.scene.rotation.y = -Math.PI + 0.75;
-        //     this.cameraModel = gltf.scene;
-        //     this.cameraModel.scale.set(320, 350, 320);
-        
         this._resetScene();
     }
 
@@ -504,12 +488,8 @@ class App {
     }
 
     _createLookBook() {
-        const left = document.querySelector(".left-btn");
-        const right = document.querySelector(".right-btn");
-    
-        let currentIndex = 0;
-        const imagesPerPage = 6;
-    
+        const container = document.querySelector(".lookbook-container");
+
         const images = [
             "./assets/lookbook/jordan_ferrari.jpeg",
             "./assets/lookbook/kobe_icebucket.jpeg",
@@ -524,132 +504,113 @@ class App {
             "./assets/lookbook/malcomx.jpeg",
             "./assets/lookbook/martinluther.jpeg",
         ];
-
+    
+        // Outer lens view (like camera viewfinder)
         const outer = document.createElement("div");
-        outer.style.width = "960px";
-        outer.style.height = "640px";
-        outer.style.backgroundColor = "#transparent";
-        outer.style.overflow = "hidden"; // keep it tidy
-        outer.style.display = "flex";
-        outer.style.alignItems = "center";
-        outer.style.justifyContent = "center";
-
-        // inner grid container
+        outer.style.width = "fit-content";
+        outer.style.height = "100%";
+        outer.style.position = "absolute";
+        outer.style.top = "-1%";
+        outer.style.left = "0";
+        outer.style.transform = "translate(-50%, -50%)";
+        outer.style.overflow = "hidden";
+        outer.style.borderRadius = "0"; // Circular lens view
+        outer.style.boxShadow = "inset 0 0 200px rgba(0, 0, 0, 0.85)";
+        outer.style.backgroundColor = "#000";
+        outer.style.zIndex = "10000";
+        outer.style.cursor = "pointer";
+    
+        // Scrollable inner container with grid
+        const scrollContainer = document.createElement("div");
+        scrollContainer.style.height = "100%";
+        scrollContainer.style.overflowY = "scroll";
+        scrollContainer.style.padding = "20px";
+        scrollContainer.style.zIndex = "9999";
+    
         const grid = document.createElement("div");
         grid.style.display = "grid";
-        grid.style.gridTemplateColumns = "repeat(3, 1fr)";
-        grid.style.gridTemplateRows = "repeat(2, 1fr)";
+        grid.style.gridTemplateColumns = "repeat(2, 1fr)";
         grid.style.gap = "20px";
-        grid.style.width = "920px"; // slightly less for padding
-        grid.style.height = "600px";
-        grid.style.padding = "10px";
+        grid.style.width = "fit-content";
         grid.style.boxSizing = "border-box";
-
-        outer.appendChild(grid);
-
-        const renderImages = () => {
-            grid.innerHTML = "";
-            const visibleImages = images.slice(currentIndex, currentIndex + imagesPerPage);
-
-            visibleImages.forEach(src => {
-                const frame = document.createElement("div");
-                frame.style.width = "100%";
-                frame.style.height = "100%";
-                frame.style.maxWidth = "220px";
-                frame.style.maxHeight = "220px";
-                frame.style.border = "6px solid #2c2c2c";
-                frame.style.background = "#fff";
-                frame.style.borderRadius = "12px";
-                frame.style.boxShadow = "0 6px 10px rgba(0,0,0,0.6)";
-                frame.style.display = "flex";
-                frame.style.alignItems = "center";
-                frame.style.justifyContent = "center";
-                frame.style.overflow = "hidden";
-                frame.style.cursor = "pointer";
-                frame.style.transition = "transform 0.3s ease";
-
-                const img = document.createElement("img");
-                img.src = src;
-                img.style.width = "100%";
-                img.style.height = "100%";
-                img.style.objectFit = "cover";
-                img.style.borderRadius = "6px";
-
-                frame.appendChild(img);
-                grid.appendChild(frame);
-
-                // Enlarge on click
-                frame.onclick = () => {
-                    const overlay = document.createElement("div");
-                    overlay.style.position = "fixed";
-                    overlay.style.top = "0";
-                    overlay.style.left = "0";
-                    overlay.style.width = "100vw";
-                    overlay.style.height = "100vh";
-                    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-                    overlay.style.display = "flex";
-                    overlay.style.alignItems = "center";
-                    overlay.style.justifyContent = "center";
-                    overlay.style.zIndex = "9999";
-
-                    const enlarged = document.createElement("img");
-                    enlarged.src = src;
-                    enlarged.style.maxWidth = "90vw";
-                    enlarged.style.maxHeight = "90vh";
-                    enlarged.style.borderRadius = "16px";
-                    enlarged.style.boxShadow = "0 0 20px rgba(0, 0, 0, 0.5)";
-                    enlarged.style.objectFit = "contain";
-
-                    const close = document.createElement("button");
-                    close.innerText = "×";
-                    close.style.position = "absolute";
-                    close.style.top = "20px";
-                    close.style.right = "30px";
-                    close.style.fontSize = "3rem";
-                    close.style.color = "#fff";
-                    close.style.background = "transparent";
-                    close.style.border = "none";
-                    close.style.cursor = "pointer";
-                    close.onclick = () => document.body.removeChild(overlay);
-
-                    overlay.appendChild(enlarged);
-                    overlay.appendChild(close);
-                    document.body.appendChild(overlay);
-                };
-            });
-        };
+        grid.style.zIndex = "9998";
+        grid.style.margin = "0 auto";
     
-        // Init render
-        renderImages();
+        images.forEach(src => {
+            const frame = document.createElement("div");
+            frame.style.width = "100%";
+            frame.style.aspectRatio = "3/4";
+            frame.style.border = "4px solid #fff";
+            frame.style.background = "#111";
+            frame.style.borderRadius = "10px";
+            frame.style.boxShadow = "0 8px 20px rgba(255,255,255,0.5)";
+            frame.style.overflow = "hidden";
+            frame.style.cursor = "pointer";
+            frame.style.transition = "transform 0.3s ease";
+            frame.style.zIndex = "10000";
+            frame.style.maxWidth = "300px";
+            frame.style.margin = "0 auto";
+            frame.style.zIndex = "9999";
     
-        // Left/Right button logic
-        left.onclick = () => {
-            currentIndex = (currentIndex - imagesPerPage + images.length) % images.length;
-            renderImages();
-        };
+            const img = document.createElement("img");
+            img.src = src;
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "cover";
     
-        right.onclick = () => {
-            currentIndex = (currentIndex + imagesPerPage) % images.length;
-            renderImages();
-        };
+            frame.appendChild(img);
+            grid.appendChild(frame);
     
-        // Optional: add swipe support for mobile
-        let startX = null;
-        outer.addEventListener("touchstart", (e) => startX = e.touches[0].clientX);
-        outer.addEventListener("touchend", (e) => {
-            if (startX === null) return;
-            const deltaX = e.changedTouches[0].clientX - startX;
-            if (Math.abs(deltaX) > 50) {
-                if (deltaX > 0) left.onclick();
-                else right.onclick();
-            }
-            startX = null;
+            // Click to enlarge
+            frame.onclick = () => {
+                const overlay = document.createElement("div");
+                overlay.style.position = "fixed";
+                overlay.style.top = "0";
+                overlay.style.left = "0";
+                overlay.style.width = "100vw";
+                overlay.style.height = "100vh";
+                overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                overlay.style.display = "flex";
+                overlay.style.alignItems = "center";
+                overlay.style.justifyContent = "center";
+                overlay.style.zIndex = "9999";
+    
+                const enlarged = document.createElement("img");
+                enlarged.src = src;
+                enlarged.style.maxWidth = "90vw";
+                enlarged.style.maxHeight = "90vh";
+                enlarged.style.borderRadius = "16px";
+                enlarged.style.boxShadow = "0 0 20px rgba(0, 0, 0, 0.5)";
+                enlarged.style.objectFit = "contain";
+    
+                const close = document.createElement("button");
+                close.innerText = "×";
+                close.style.position = "absolute";
+                close.style.top = "20px";
+                close.style.right = "30px";
+                close.style.fontSize = "3rem";
+                close.style.color = "#fff";
+                close.style.background = "transparent";
+                close.style.border = "none";
+                close.style.cursor = "pointer";
+                close.onclick = () => document.body.removeChild(overlay);
+    
+                overlay.appendChild(enlarged);
+                overlay.appendChild(close);
+                document.body.appendChild(overlay);
+            };
         });
-
+    
+        scrollContainer.appendChild(grid);
+        outer.appendChild(scrollContainer);
+        // container.appendChild(outer);
+    
+        // Create and add CSS3DObject
         this.lookBookObject = new CSS3DObject(outer);
         this.lookBookObject.scale.set(0.1, 0.1, 0.1); // tweak for your scene
         this.lookBookObject.rotation.y = -Math.PI / 2;
         this.lookBookObject.position.set(60,-3,2.5)
+        this.lookBookObject.rotation.x = 0.001;
         this.scene.add(this.lookBookObject);
     }
     
@@ -665,63 +626,6 @@ class App {
         if (!this.cameraModel) return;
 
         this._hideMainNav();
-
-        const duration = 0.75;
-
-        // Step 1: Rotate the model to face the viewer
-        // gsap.to(this.cameraModel.rotation, {
-            
-        //     y: -4.7,
-        //     z: -0.025,
-        //     duration: 0.3,
-        //     ease: "power2.inOut",
-        // });
-        // gsap.to(this.cameraModel.position, {
-        //     x: 90,
-        //     y:-40,
-        //     z: 0,
-        //     duration: 0.3,
-        //     ease: "power2.inOut"
-        // });
-        // gsap.to(this.camera.position, {
-        //     x: .30,  // Adjust based on your scene
-        //     y: .155, // Raise the camera slightly
-        //     z: .175,  // Move closer or further
-        //     duration: 0.3,
-        //     ease: "power2.inOut",
-        //     onUpdate: () => {
-        //         this.camera.lookAt(this.cameraModel.position); // Keep looking at the model
-        //     }
-        // });
-
-
-        // // Step 2: Move it toward the camera
-        // setTimeout(() => {
-        //     gsap.to(this.cameraModel.position, {
-        //         x: -50,
-        //         y: -50,
-        //         z: 0.8,
-        //         duration: 1.5,
-        //         ease: "power2.in"
-        //     });
-    
-        //     // Step 3: Optional zoom effect by slightly scaling it up
-        //     gsap.to(this.cameraModel.scale, {
-        //         x: 360,
-        //         y: 390,
-        //         z: 360,
-        //         duration: 1.5,
-        //         ease: "power2.in",
-        //         onComplete: () => {
-        //             this._createLookBook();
-        //         }
-        //     });
-        // }, 300)
-
-        // // Step 4: Fade in the "film" overlay
-        // setTimeout(() => {
-        //     this.filmOverlay.style.opacity = "0.9";
-        // }, duration * 1000 - 500); // Begin fade just before movement ends
 
         const tl = gsap.timeline({
             ease: "power2.in"
@@ -761,20 +665,15 @@ class App {
         }, "-=0.125");
 
         
-        // Optional: fade in film overlay after motion
-        tl.to(this.filmOverlay, {
-            opacity: 0.9
-        }, "-=0.4"); // begin fade before movement ends
-        
         // Final step: show lookbook
         tl.call(() => {
-            this._createLookBook();
             this._showLookbookBtns();
-        }, null, "-=0.5");
+            this._createLookBook();
+        }, null, "-=1.11");
         
         tl.call(() => {
             this._showBackBtn();
-        }, null, "+=3");
+        }, null, "<");
 
     }
 
@@ -784,6 +683,7 @@ class App {
         this._showMainNav();
         this._hideLookbookBtns();
         this._hideBackBtn();
+        console.log("Inside _lookbookToHome");
 
         this._resetScene();
     }
@@ -802,6 +702,7 @@ class App {
         if (!this.cameraModel) return;
 
         this._showServicesSection();
+        this._showBackBtn();
         this._hideMainNav();
 
     }
@@ -811,6 +712,7 @@ class App {
 
         this._hideServicesSection();
         this._showMainNav();
+        this._hideBackBtn();
 
         gsap.to(this.sunLight, { intensity: 0.2, duration: 0.5 });
     }
