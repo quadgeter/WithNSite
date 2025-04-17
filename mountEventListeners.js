@@ -45,10 +45,24 @@ frames.forEach(frame => {
 
 const buttons = document.querySelectorAll('.expand-btn');
 
-buttons.forEach((btn, index) => {
+buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-        const info = btn.parentElement.nextElementSibling;
-        info.style.display = info.style.display === 'block' ? 'none' : 'block';
-        btn.textContent = info.style.display === 'block' ? '–' : '＋';
+        const currentInfo = btn.parentElement.nextElementSibling;
+        const isOpen = currentInfo.style.display === 'block';
+
+        // Close all others
+        document.querySelectorAll('.service-info').forEach(info => {
+            info.style.display = 'none';
+        });
+
+        document.querySelectorAll('.expand-btn').forEach(b => {
+            b.textContent = '＋';
+        });
+
+        // Toggle current one
+        if (!isOpen) {
+            currentInfo.style.display = 'block';
+            btn.textContent = '–';
+        }
     });
 });

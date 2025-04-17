@@ -312,7 +312,7 @@ class App {
                 break;
             case "lookbook":
                 console.log(`Switching to Lookbook page ${current}`);
-                
+                this._hideFooter();
                 this._homeToLookbookPage();
                 break;
             case "book":
