@@ -35,11 +35,38 @@
       </div>
     </div>
     <div class="lookbook-container">
-      <!-- <h2 class="lookbook-title">Lookbook</h2>
-      <p>Find out how we can help you capture the essence of your brand through striking visuals and intentional storytelling.</p>
-      <button class="cta-main">Get Started</button> -->
-      <!-- <button class="left-btn"><i class="fa-solid fa-play"></i></button>
-      <button class="right-btn"><i class="fa-solid fa-play"></i></button> -->
+    </div>
+    <div class="lookbook-content">
+      <div class="outer">
+        <div class="scroll-container">
+          <div class="grid">
+            <div class="frame">
+              <img src="./assets/lookbook/jordan_ferrari.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/kobe_icebucket.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/malcomx.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/martinluther.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/jordan_ferrari.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/kobe_icebucket.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/malcomx.jpeg">
+            </div>
+            <div class="frame">
+              <img src="./assets/lookbook/martinluther.jpeg">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="services-panel">
@@ -103,6 +130,19 @@
         <button>Book a Consultation</button>
       </div> -->
     </div>
+
+    <div class="about-section">
+      <div class="main-content">
+        <img src="./assets/WithNSiteLogo.png">
+        <p>a multi-media company specializing in commercial video production, music vides, live events and more.</p>
+        <p>striving to create innovative and creative content</p>
+      </div>
+      <div class="socials">
+        <a href="https://www.instagram.com/withnsite/" target="_blank" class="footer-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.instagram.com/withnsite/" target="_blank" class="footer-link"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://www.instagram.com/withnsite/" target="_blank" class="footer-link"><i class="fa-brands fa-tiktok"></i></a>
+      </div>
+    </div>
     
     <div id="threejs-container"></div>
     <div class="footer">
@@ -113,21 +153,9 @@
       </div>
       <!-- <p class="copyright">© WithNSite 2025</p> -->
     </div>
-    <script>
-      const buttons = document.querySelectorAll('.expand-btn');
-
-      buttons.forEach((btn, index) => {
-        btn.addEventListener('click', () => {
-          const info = btn.parentElement.nextElementSibling;
-          info.style.display = info.style.display === 'block' ? 'none' : 'block';
-          btn.textContent = info.style.display === 'block' ? '–' : '＋';
-        });
-      });
-
-    </script>
+    <script src="./mountEventListeners.js"></script>
     <script type="module" src="main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/CustomEase.min.js"></script>
-
   </body>
 </html>
