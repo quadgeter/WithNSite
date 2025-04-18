@@ -14,6 +14,7 @@
     </script>
     <script src="https://kit.fontawesome.com/3f263d7cad.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="stylesheet" type="text/css" href="./responsive.css">
   </head>
   <body>
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
@@ -70,11 +71,11 @@
     </div>
 
     <div id="services-panel">
-      <h1 style="text-transform:uppercase;color:#333;margin-bottom:1rem;font-size:4rem;">Our Services</h1>
+      <h1>Our Services</h1>
       <div class="services-content">
         <!-- Left Section: Services -->
         <div class="left-container">
-          <p style="font-size:1.2rem;">We work across a variety of industries including fashion, music, personal brands, corporate events, public and private gatherings, real estate, hospitality, and more. Whether you’re launching a product, telling a story, or building your brand — we help you bring it to life through powerful visuals.</p>
+          <p style="font-size:1.2rem;text-transform:capitalize">We work across a variety of industries including fashion, music, personal brands, corporate events, public and private gatherings, real estate, hospitality, and more. <span class="hide">Let us help bring your vision to life.</p>
           <ul class="service-list">
             <li class="service-item">
               <div class="service-header">
@@ -114,6 +115,7 @@
               </ul>
             </li>
           </ul>
+          <button class="consult-btn">Get a Free Consultation</button>
         </div>
     
         <!-- Right Section: Images -->
@@ -130,6 +132,36 @@
         <button>Book a Consultation</button>
       </div> -->
     </div>
+
+    <div class="booking-section">
+      <h2 class="booking-header">Book A Consult</h2>
+      
+      <form class="booking-form">
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="full-name" placeholder="Your name" required />
+    
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required />
+    
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+    
+        <label for="service">What Service Are You Interested In?</label>
+        <select id="service" name="service" required>
+          <option value="" disabled selected>Select a service</option>
+          <option value="photography">Photography</option>
+          <option value="videography">Videography</option>
+          <option value="production">Commercial Production</option>
+          <option value="other">Other</option>
+        </select>
+    
+        <label for="project-details">Tell Me a Little About the Project</label>
+        <textarea id="project-details" name="project-details" rows="5" placeholder="Include timeline, goals, vibe, etc..."></textarea>
+    
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    
 
     <div class="about-section">
       <div class="main-content">

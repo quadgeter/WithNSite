@@ -22,7 +22,7 @@ class App {
         this.renderer.domElement.style.position = "absolute";
         this.renderer.domElement.style.zIndex = "1"; 
         // container.appendChild(this.renderer.domElement);
-        document.body.appendChild(this.renderer.domElement);
+        container.appendChild(this.renderer.domElement);
 
         this.cssRenderer = new CSS3DRenderer();
         this.cssRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -32,15 +32,15 @@ class App {
         this.cssRenderer.domElement.style.pointerEvents = "none";
         this.cssRenderer.domElement.style.zIndex = "100";
         // container.appendChild(this.cssRenderer.domElement);
-        document.body.appendChild(this.cssRenderer.domElement);
+        container.appendChild(this.cssRenderer.domElement);
 
         
-        const fov = 85;
+        const fov = 75;
         const aspect = width / height;
         const near = 0.1;
         const far = 1000;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-        this.camera.position.set(1.25, 0, 1);
+        this.camera.position.set(0.25, 0.15, 0.25);
         
         this.scene = new THREE.Scene();
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -140,6 +140,14 @@ class App {
         backBtn.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.changePage("home");
+            });
+        });
+
+        const consultBtn = document.querySelectorAll(".consult-btn");
+
+        consultBtn.forEach(btn => {
+            btn.addEventListener("click", () => {
+                this.changePage("book");
             });
         });
     }
@@ -262,16 +270,16 @@ class App {
     changePage(newPage) {
         if (!this.states.includes(newPage)) return;
 
-        const currentPage = this.pageState;
+        const previousPage = this.pageState;
         this.pageState = newPage;
-        this._updateScene(currentPage);
+        this._updateScene(previousPage);
     }
 
-    _updateScene(current) {
+    _updateScene(previousPage) {
         switch (this.pageState) {
             case "home":
                 this._showFooter();
-                switch (current) {
+                switch (previousPage) {
                     case "videos":
                         this.controls.enabled = true;
                         this._removeIframeFromCamera();
@@ -287,36 +295,46 @@ class App {
                         this._lookbookToHome();
                         break;
                     case "book":
+                        this._bookingToHome();
                         this.controls.enabled = true;
                         break;
                     case "about":
                         this.controls.enabled = true;
                         this._aboutToHome();
                     default:
-                        console.log("Current Page State not found");
+                        console.log("previousPage Page State not found");
                 }
-                console.log(`Switching to Home page from ${current}`);
+                console.log(`Switching to Home page from ${previousPage}`);
                 // this._animateHome();
                 break;
             case "videos":
-                console.log(`Switching to Videos page ${current}`);
+                console.log(`Switching to Videos page ${previousPage}`);
                 this.controls.enabled = false;
                 this._hideFooter();
                 this._homeToVideoPage();
                 break;
             case "services":
-                console.log(`Switching to Services page ${current}`);
+                if (previousPage == "book") {
+                    this._bookingToServicesPage();
+                    return;
+                }
+                console.log(`Switching to Services page ${previousPage}`);
                 this.controls.enabled = false;
                 this._hideFooter();
                 this._homeToServicesPage();
                 break;
             case "lookbook":
-                console.log(`Switching to Lookbook page ${current}`);
+                console.log(`Switching to Lookbook page ${previousPage}`);
                 this._hideFooter();
                 this._homeToLookbookPage();
                 break;
             case "book":
+                if (previousPage == "services") {
+                    this._servicesToBookingPage();
+                    return;
+                }
                 console.log("Switching to Book Us page");
+                this._homeToBookingPage();
                 this.controls.enabled = false;
                 this._hideFooter();
                 break;
@@ -595,6 +613,7 @@ class App {
     _homeToServicesPage() {
         if (!this.cameraModel) return;
 
+        this._resetScene();
         this._showServicesSection();
         this._showBackBtn();
         this._hideMainNav();
@@ -629,21 +648,23 @@ class App {
         gsap.to(this.cameraModel.position, {
             // x: 75,
             y: -30,
-            z: -45,
-            duration: 0.3,
-            ease: "power2.in"
+            z: -35,
+            duration: 0.5,
+            ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.scale, {
-            x:320,
-            duration: 0.3,
-            ease: "power2.in"
+            x:250,
+            y:280,
+            z:250,
+            duration: 0.5,
+            ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.rotation, {
             y: Math.PI - 1, // -0.7,
-            duration: 0.3,
-            ease: "power2.in"
+            duration: 0.5,
+            ease: "power2.out"
         });
 
         gsap.to(this.camera.position, {
@@ -651,7 +672,7 @@ class App {
             y: 0.155, // Raise the camera slightly
             z: 0.175,  // Move closer or further
             duration: 0.5,
-            ease: "power2.in",
+            ease: "power2.out",
             onUpdate: () => {
                 this.camera.lookAt(this.cameraModel.position); // Keep looking at the model
             }
@@ -663,6 +684,50 @@ class App {
         this._showMainNav();
         this._hideBackBtn();
         this._resetScene();
+    }
+
+    _showBooking() {
+        const container = document.querySelector(".booking-section");
+
+        if (container) {
+            container.classList.add("shown");
+            console.log("showing booking");
+        }
+    }
+
+    _hideBooking() {
+        const container = document.querySelector(".booking-section");
+
+        if (container) {
+            container.classList.remove("shown");
+        }
+    }
+
+    _servicesToBookingPage() {
+        this._hideServicesSection();
+        this._resetScene();
+        this._showBooking();
+    }
+
+    _bookingToServicesPage () {
+        this._hideBooking();
+        this._resetScene();
+        this._showServicesSection();
+    }
+
+
+    _homeToBookingPage() {
+        this._resetScene();
+        this._hideMainNav();
+        this._showBackBtn();
+        this._hideFooter();
+        this._showBooking();
+    }
+
+    _bookingToHome() {
+        this._showMainNav();
+        this._hideBackBtn();
+        this._hideBooking();
     }
     
 

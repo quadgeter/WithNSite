@@ -66,3 +66,13 @@ buttons.forEach((btn) => {
         }
     });
 });
+
+const servicesPanel = document.getElementById("services-panel");
+const backBtn = document.getElementById("back-btn");
+
+if (servicesPanel && backBtn) {
+  servicesPanel.addEventListener("scroll", () => {
+    const scrollTop = servicesPanel.scrollTop;
+    backBtn.style.transform = `translateY(-${scrollTop}px)`;
+  });
+}

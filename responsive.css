@@ -1,0 +1,191 @@
+@media screen and (min-width: 1024px) {
+    .about-section .main-content p {
+        font-size: 1.4rem; /* slightly larger for laptops */
+    }
+
+    .about-section .main-content img {
+        width: 300px; /* optional: increase image size too */
+    }
+
+    #main-nav ul li button p,
+    #main-nav ul li a p{
+        font-size: 4rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #back-btn {
+        font-size: 2rem;
+        position: absolute;
+    }
+
+    #main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        margin: 1.2rem;
+        height: fit-content;
+    }
+
+    #main-nav ul {
+        padding-inline-start: 0;
+        
+    }
+
+    #main-nav ul li button p,
+    #main-nav ul li a p{
+        font-size: 1.6rem;
+        line-height: 0.8;
+    }
+
+    #playlist-container {
+        /* 👇 adjust styles for smaller screens */
+        position: fixed;
+        top: 50%;
+        left: 0;
+        width: 95%;
+        height: 45%;
+        font-size: 0.9rem;
+        flex-direction: column;  /* example: stack items vertically */
+        margin: 1rem auto;
+    }
+
+    .playlist-header {
+        height: fit-content;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .playlist-item {
+        margin: 0.5rem;
+        height: fit-content;
+    }
+
+    .playlist-item .thumb {
+        width: 100px;
+        height: auto;
+    }
+
+    .playlist-item .title {
+        font-size: 0.95rem;
+        font-weight: bold;
+        margin-bottom: 0;
+        margin-top: 0.4rem;
+        color: rgba(0, 0, 0, 0.7)
+    }
+
+    .lookbook-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+
+    .lookbook-content {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    .outer {
+        width: 80%;
+        height: 80%;
+        margin: 2rem auto;
+    }
+
+    #services-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        gap: 0;
+    }
+
+    #services-panel h1 {
+        font-size: 2rem;
+        text-align: center;
+        margin-top: 10rem;
+    }
+
+    .services-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        margin: 0 auto;
+        width: 95%;
+    }
+
+    .left-container {
+        margin: 0 1rem;
+        padding: 0 1rem;
+        align-items: center;
+        text-align: left;
+    }
+
+    .left-container p {
+        font-size: 1rem;
+    }
+
+    .service-list {
+        text-align: left;
+        width: 100%;
+        left: 0;
+        margin: 0;
+        margin-left: 1rem;
+    }
+
+    .service-item {
+
+    }
+
+    .service-header {
+        /* justify-content: flex-start; */
+        align-items: center;
+        width: fit-content;
+    }
+
+    .service-header h3 {
+        font-size: 1.2rem;
+        height: 100%;
+        line-height: 1;
+        margin: 0;
+        padding-right: 1rem;
+    }
+
+    .expand-btn {
+        font-size: 1.2rem;
+        width: fit-content;
+        height: fit-content;
+    }
+
+    .service-info {
+        font-size: 1rem;
+        padding-left: 1.5rem;
+    }
+
+    .consult-btn {
+        font-size: 0.8rem;
+        margin: 1rem 0;
+        padding: 0.7rem 1rem;
+    }
+
+    .right-container {
+        justify-content: center;
+        gap: 1rem;
+        padding: 0;
+    }
+
+    .right-container img {
+        width: 45vw;
+        max-width: 170px;
+        height: auto;
+    }
+}
+  
