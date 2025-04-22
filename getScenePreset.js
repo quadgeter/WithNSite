@@ -47,15 +47,15 @@ export function getScenePreset(view, isMobile) {
         },
         "about": {
             desktop: {
-                modelPos:   { y: -30, z: -35 },
+                modelPos:   { x: 75, y: -30, z: -35 },
                 modelRot:   { y: Math.PI - 1 },
                 modelScale: { x: 250, y: 280, z: 250 },
                 cameraPos:  { x: 0.3, y: 0.155, z: 0.175 }
             },
             mobile: {
-                modelPos:   { y: -1.6, z: -1.25 },
-                modelRot:   { y: Math.PI },
-                modelScale: { x: 0.45, y: 0.45, z: 0.45 },
+                modelPos:   { x: 7.5, y: -3.75, z: 2 },
+                modelRot:   { y: Math.PI - 1.6 },
+                modelScale: { x: 20, y: 20, z: 15 },
                 cameraPos:  { x: 0, y: 0.2, z: 2.25 }
             }
         }

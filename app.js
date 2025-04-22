@@ -694,32 +694,34 @@ class App {
         this._showBackBtn();
         this._showAboutSection();
 
+        const preset = getScenePreset("about", this.isMobile);
+
         gsap.to(this.cameraModel.position, {
-            // x: 75,
-            y: -30,
-            z: -35,
+            x: preset.modelPos.x,
+            y: preset.modelPos.y,
+            z: preset.modelPos.z,
             duration: 0.5,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.scale, {
-            x:250,
-            y:280,
-            z:250,
+            x: preset.modelScale.x,
+            y: preset.modelScale.y,
+            z: preset.modelScale.z,
             duration: 0.5,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.rotation, {
-            y: Math.PI - 1, // -0.7,
+            y: preset.modelRot.y, // -0.7,
             duration: 0.5,
             ease: "power2.out"
         });
 
         gsap.to(this.camera.position, {
-            x: 0.3,  // Adjust based on your scene
-            y: 0.155, // Raise the camera slightly
-            z: 0.175,  // Move closer or further
+            x: preset.cameraPos.x,  // Adjust based on your scene
+            y: preset.cameraPos.y, // Raise the camera slightly
+            z: preset.cameraPos.z,  // Move closer or further
             duration: 0.5,
             ease: "power2.out",
             onUpdate: () => {
