@@ -43,7 +43,7 @@
         position: fixed;
         top: 50%;
         left: 0;
-        width: 95%;
+        width: 90%;
         height: 45%;
         font-size: 0.9rem;
         flex-direction: column;  /* example: stack items vertically */
@@ -208,6 +208,12 @@
 
     .booking-form {
         width: 70%;
+    }
+
+    .about-section {
+        width: 96%;
+        margin: 0 auto;
+        margin-top: 2rem;
     }
 }
 

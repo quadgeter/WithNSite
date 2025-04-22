@@ -119,6 +119,11 @@ body {
     transform: scale(1.1);
 }
 
+#back-btn.booking {
+  font-size: 1.6rem;
+}
+
+
 
 #playlist-container {
     position: absolute;
@@ -721,4 +726,24 @@ body {
   background-color: #444;
 }
 
+.yt-core-attributed-string.ytmVideoInfoLink {
+  font-size: 1.25rem;      /* or whatever size you need */
+  line-height: 1.2;        /* adjust if needed */
+}
 
+/* if it’s being overridden by inline styles, force it: */
+.yt-core-attributed-string.ytmVideoInfoLink {
+  font-size: 1.25rem !important;
+}
+
+.yt-core-attributed-string--white-space-no-wrap {
+  font-size: 2rem !important;
+}
+
+.ytp-title-link {
+  font-size: 2rem !important;
+}
+
+.ytmVideoInfoVideoTitle {
+  font-size: 2.2rem !important;
+}

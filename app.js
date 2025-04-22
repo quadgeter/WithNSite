@@ -3,6 +3,12 @@ import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
 import { CSS3DRenderer, CSS3DObject } from "https://unpkg.com/three/examples/jsm/renderers/CSS3DRenderer.js";
 import { RGBELoader } from './node_modules/three/examples/jsm/loaders/RGBELoader.js';
+import { getScenePreset } from "./getScenePreset.js";
+
+function isMobileViewport() {
+    return window.innerWidth <= 768; // or 767, depending on your mobile breakpoint
+}
+  
 
 
 class App {
@@ -11,6 +17,7 @@ class App {
     }
 
     _initialize() {
+        this.isMobile = isMobileViewport();
         this.pageState = "home";
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -40,6 +47,7 @@ class App {
         const near = 0.1;
         const far = 1000;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
+
         this.camera.position.set(0.25, 0.15, 0.25);
         
         this.scene = new THREE.Scene();
@@ -106,12 +114,27 @@ class App {
                 c.castShadow = false;
                 c.receiveShadow = false;
             });
-            gltf.scene.position.set(75 , -30, 30);
-            gltf.scene.rotation.y = -Math.PI + 0.75;
+
             this.cameraModel = gltf.scene;
+
+            this.cameraModel.position.set(75 , -30, 30);
+            this.cameraModel.rotation.y = -Math.PI + 0.75;
+            
             this.cameraModel.scale.set(320, 350, 320);
             const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
             this.cameraModel.add(axesHelper);
+
+            if (isMobileViewport()) {
+                // this.camera.far = 100;
+                this.cameraModel.scale.set(20,20,15);
+                this.cameraModel.rotation.y = -2.5;
+                this.cameraModel.position.set(7.5,-2.5,3 );
+                // this.camera.position.y -= 15;
+                // this._animateFOV(75);
+                this.controls.target.set(7.5,0,3);
+                // this.camera.position.y = -8;
+                this.controls.update();
+            }
 
             const screenMarker = new THREE.Object3D();
             screenMarker.name = "screenMarker";
@@ -367,6 +390,9 @@ class App {
 
     _hideBackBtn() {
         const backBtn = document.getElementById("back-btn");
+        if (backBtn.classList.length > 1) {
+            backBtn.classList.remove("booking"); // remove booking class if it applied
+        }
         if (backBtn) {
             backBtn.classList.remove("shown");
             console.log("back button hidden");
@@ -376,6 +402,9 @@ class App {
     _showBackBtn() {
         const backBtn = document.getElementById("back-btn");
         if (backBtn) {
+            if (this.pageState == "book") {
+                backBtn.classList.add("booking")
+            }
             backBtn.classList.add("shown");
             console.log("back button shown");
         }
@@ -426,74 +455,38 @@ class App {
             }
         });
     }
-  
-
-    _homeToVideoPage() {
-        if (!this.cameraModel) return;
-    
-        this._hideMainNav();
-        this._showBackBtn();
-        this._showPlaylist();
-
-        gsap.to(this.cameraModel.position, {
-            x: 75,
-            z: -20, 
-            duration: 0.5,
-            ease: "power2.out"
-        });
-
-        gsap.to(this.cameraModel.rotation, {
-            y: -Math.PI * 1.4, // Rotate to face forward
-            duration: 0.5,
-            ease: "power2.out",
-            onComplete: () => {
-                this._addIframeToCamera();
-            }
-        });
-
-        gsap.to(this.camera.position, {
-            x: 0.3,  // Adjust based on your scene
-            y: 0.155, // Raise the camera slightly
-            z: 0.175,  // Move closer or further
-            duration: 0.5,
-            ease: "power2.out",
-            onUpdate: () => {
-                this.camera.lookAt(this.cameraModel.position); // Keep looking at the model
-            }
-        });
-
-        this._animateFOV(65);
-    }
 
     _resetScene(){
+        const preset = getScenePreset("home", this.isMobile);
+
         gsap.to(this.cameraModel.position, {
-            x: 75,
-            y: -30,
-            z: 30,
+            x: preset.modelPos.x,
+            y: preset.modelPos.y,
+            z: preset.modelPos.z,
             duration: 0.75,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.rotation, {
-            x: 0,
-            y: -Math.PI + 0.75,
-            z: 0,
+            x: preset.modelRot.x,
+            y: preset.modelRot.y,
+            z: preset.modelRot.x,
             duration: 0.75,
             ease: "power2.out"
         });
 
         gsap.to(this.cameraModel.scale, {
-            x: 320,
-            y: 350,
-            z: 320,
+            x: preset.modelScale.x,
+            y: preset.modelScale.y,
+            z: preset.modelScale.z,
             duration: 0.75,
             ease: "power2.out"
         });
         
         gsap.to(this.camera.position, {
-            x: 0.25,
-            y: 0.15,
-            z: 0.25,
+            x: preset.cameraPos.x,
+            y: preset.cameraPos.y,
+            z: preset.cameraPos.z,
             duration: 0.5,
             ease: "power2.out",
             onUpdate: () => {
@@ -502,6 +495,51 @@ class App {
         });
     }
 
+    _homeToVideoPage() {
+        if (!this.cameraModel) return;
+
+        const preset = getScenePreset("videos", this.isMobile);
+
+        this._hideMainNav();
+        this._showBackBtn();
+        this._showPlaylist();
+
+        // 1) Model Position
+        gsap.to(this.cameraModel.position, {
+            x: preset.modelPos.x,
+            y: preset.modelPos.y,
+            z: preset.modelPos.z,
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        // 2) Model Rotation (only y was animated)
+        gsap.to(this.cameraModel.rotation, {
+            y: preset.modelRot.y,
+            duration: 0.5,
+            ease: "power2.out",
+            onComplete: () => this._addIframeToCamera()
+        });
+
+        gsap.to(this.cameraModel.scale, {
+            x: preset.modelScale.x,
+            y: preset.modelScale.y,
+            z: preset.modelScale.z
+        });
+
+        // 3) Camera Position
+        gsap.to(this.camera.position, {
+            x: preset.cameraPos.x,
+            y: preset.cameraPos.y,
+            z: preset.cameraPos.z,
+            duration: 0.5,
+            ease: "power2.out",
+            onUpdate: () => this.camera.lookAt(this.cameraModel.position)
+        });
+
+        this._animateFOV(65);
+    }
+    
     _videoToHomePage() {
         if (!this.cameraModel) return;
 
@@ -537,57 +575,68 @@ class App {
 
     _homeToLookbookPage() {
         if (!this.cameraModel) return;
-
+        
         this._hideMainNav();
-
-        const tl = gsap.timeline({
-            ease: "power2.in"
-        });
-
-        tl.to(this.camera.position, {
-            x: 0.25,
-            y: 0.15,
-            z: 0.25,
+        const preset = getScenePreset("lookbook", this.isMobile);
+        
+        const tl = gsap.timeline({ ease: "power2.in" });
+        
+        // 1) Camera moves & looks at model
+        tl.to(
+            this.camera.position,
+            {
+            x: preset.cameraPos.x,
+            y: preset.cameraPos.y,
+            z: preset.cameraPos.z,
             duration: 0.5,
             onUpdate: () => {
-                this.camera.lookAt(this.cameraModel);
-            }
-        }, 0);
+                this.camera.lookAt(this.cameraModel.position);
+            },
+        },0);
         
-        // First movement: rotation
-        tl.to(this.cameraModel.rotation, {
-            y: -4.75,
-            z: -0.025,
+        // 2) Model rotation (y & z only)
+        tl.to(
+            this.cameraModel.rotation,
+            {
+            y: preset.modelRot.y,
+            z: preset.modelRot.z,
             duration: 0.25,
-        }, "-=0.2"); // start at time 0
+            },
+            "-=0.3"
+        );
         
-        // Second movement: position (starts slightly before rotation ends)
-        tl.to(this.cameraModel.position, {
-            x: 90,
-            y: -40,
-            z: 0,
+        // 3) Model first positional shift
+        tl.to(
+            this.cameraModel.position,
+            {
+            x: preset.modelPos1.x,
+            y: preset.modelPos1.y,
+            z: preset.modelPos1.z,
             duration: 0.3,
-        }, "-=0.3"); // starts 0.3s *before* previous ends
-
-        tl.to(this.cameraModel.position, {
-            x: -50,
-            y: -50,
-            z: 0.8,
+            },"-=" + preset.timeToComplete );
+        
+        // 4) Model final positional shift
+        tl.to(
+            this.cameraModel.position,
+            {
+            x: preset.modelPos2.x,
+            y: preset.modelPos2.y,
+            z: preset.modelPos2.z,
             duration: 1.5,
-            ease: "slow(0.7, 0.7, false)",
-        }, "-=0.125");
+            ease: "slow(0.5, 0.5, false)",
+            }, "-=0.125");
 
-        
-        // Final step: show lookbook
-        tl.call(() => {
-            this._showLookbookBtns();
-        }, null, "-=1.11");
-        
-        tl.call(() => {
-            this._showBackBtn();
-        }, null, "<");
 
-    }
+        // 5) Show lookbook buttons just before the final position tween ends
+        tl.call(
+            () => this._showLookbookBtns(),
+            null, "-=1.11");
+        
+        // 6) Show back button concurrently
+        tl.call(
+            () => this._showBackBtn(),
+            null, "<");
+      }
 
     _lookbookToHome(){
         if (!this.cameraModel) return;
@@ -732,10 +781,17 @@ class App {
     
 
     _RAF() {
-        requestAnimationFrame(() => {
+        requestAnimationFrame((t = 0) => {
             this.controls.update();
             this.renderer.render(this.scene, this.camera);
             this.cssRenderer.render(this.scene, this.camera);
+            // if (this.cameraModel) {
+            //     this.camera.lookAt(this.cameraModel);
+            // }
+            if (this.cameraModel && this.pageState == "home") {
+                // this.cameraModel.rotation.y -= 0.005;
+            }
+            
             this._RAF();
         });
     }
