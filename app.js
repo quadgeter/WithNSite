@@ -68,25 +68,6 @@ class App {
             this.scene.environment = texture;
         });
 
-
-        // const rgbeLoader = new RGBELoader();
-        //     rgbeLoader.load('./assets/studio_small_08_4k.hdr', (texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping;
-
-        //     this.scene.environment = texture;
-
-        //     // ✅ For visible background you can rotate
-        //     const geometry = new THREE.SphereGeometry(20, 60, 40); // Large enough to enclose the scene
-        //     geometry.scale(-1, 1, 1); // Invert the sphere to view from inside
-
-        //     const material = new THREE.MeshBasicMaterial({ map: texture });
-        //     const backgroundSphere = new THREE.Mesh(geometry, material);
-
-        //     backgroundSphere.rotation.y = Math.PI + 0.75; // Rotate it if needed
-        //     this.scene.add(backgroundSphere);
-        // });
-
-
         this.states = ["home", "videos", "lookbook", "services", "book", "about"];
 
         window.addEventListener('resize', this._onWindowResize.bind(this));
