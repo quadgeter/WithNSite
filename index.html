@@ -130,7 +130,7 @@
     <div class="booking-section">
       <h2 class="booking-header">Book A Consult</h2>
       
-      <form class="booking-form">
+      <form class="booking-form" onSubmit="sendEmail(event)">
         <label for="full-name">Full Name</label>
         <input type="text" id="full-name" name="full-name" placeholder="Your name" required />
     
@@ -179,9 +179,10 @@
       </div>
       <!-- <p class="copyright">© WithNSite 2025</p> -->
     </div>
-    <script src="./mountEventListeners.js"></script>
     <script type="module" src="main.js"></script>
+    <script src="./mountEventListeners.js"></script>
+    <script type="module" src="emailService.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/CustomEase.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   </body>
 </html>

@@ -17,6 +17,7 @@ export function getScenePreset(view, isMobile) {
         "videos": {
             desktop: {
                 modelPos:   { x: 75, y: -30 ,z: -20 }, // y assumed from previous scene
+                modelScale: { x: 320, y: 350, z: 320 },
                 modelRot:   { y: -Math.PI * 1.4},
                 cameraPos:  { x: 0.3, y: 0.155, z: 0.175 }
             },
@@ -37,24 +38,24 @@ export function getScenePreset(view, isMobile) {
                 timeToComplete: 0.3
             },
             mobile: {
-                modelPos1: { x: 0.4, y: -2.25, z: -0.4 },
-                modelPos2: { x: -9, y: -2.25, z: -3.6 },
-                modelRot:  { x: 0, y: Math.PI / 2 - 0.2, z: 0 },
+                modelPos1: { x: 0.25, y: -2.25, z: -0.25 },
+                modelPos2: { x: -20, y: -2.25, z: -3 },
+                modelRot:  { x: 0, y: Math.PI / 2 - 0.2, z: -0.025 },
                 modelScale: { x: 0.5, y: 0.5, z: 0.5 },
                 cameraPos: { x: 0.25, y: 0.15, z: 0.25 },
-                timeToComplete: 0.125
+                timeToComplete: 0.1
             }
         },
         "about": {
             desktop: {
                 modelPos:   { x: 75, y: -30, z: -35 },
-                modelRot:   { y: Math.PI - 1 },
+                modelRot:   { x: 0, y: Math.PI - 1, z: 0 },
                 modelScale: { x: 250, y: 280, z: 250 },
                 cameraPos:  { x: 0.3, y: 0.155, z: 0.175 }
             },
             mobile: {
-                modelPos:   { x: 7.5, y: -3.75, z: 2 },
-                modelRot:   { y: Math.PI - 1.6 },
+                modelPos:   { x: 8.4, y: -4.75, z: 2.4 },
+                modelRot:   { x: 0.0, y: Math.PI - 1.6, z: -0.0 },
                 modelScale: { x: 20, y: 20, z: 15 },
                 cameraPos:  { x: 0, y: 0.2, z: 2.25 }
             }

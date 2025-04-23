@@ -100,10 +100,7 @@ class App {
         this._RAF();
 
         this.controls.target.set(100,-10,0); // or wherever you want it to look
-        this.controls.update();
-
-        gsap.registerPlugin(CustomEase) 
-        
+        this.controls.update();    
     }
 
      
@@ -713,7 +710,9 @@ class App {
         });
 
         gsap.to(this.cameraModel.rotation, {
+            x: preset.modelRot.x,
             y: preset.modelRot.y, // -0.7,
+            z: preset.modelRot.z,
             duration: 0.5,
             ease: "power2.out"
         });
@@ -801,6 +800,7 @@ class App {
     _onWindowResize(){
         const width = window.innerWidth;
         const height = window.innerHeight;
+        this.isMobile = isMobileViewport();
 
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();

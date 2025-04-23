@@ -119,11 +119,6 @@ body {
     transform: scale(1.1);
 }
 
-#back-btn.booking {
-  font-size: 1.6rem;
-}
-
-
 
 #playlist-container {
     position: absolute;
