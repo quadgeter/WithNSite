@@ -39,7 +39,7 @@ export function getScenePreset(view, isMobile) {
             },
             mobile: {
                 modelPos1: { x: 0.25, y: -2.25, z: -0.25 },
-                modelPos2: { x: -20, y: -2.25, z: -3 },
+                modelPos2: { x: -20, y: -2.25, z: -10 },
                 modelRot:  { x: 0, y: Math.PI / 2 - 0.2, z: -0.025 },
                 modelScale: { x: 0.5, y: 0.5, z: 0.5 },
                 cameraPos: { x: 0.25, y: 0.15, z: 0.25 },

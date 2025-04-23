@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
 import { CSS3DRenderer, CSS3DObject } from "https://unpkg.com/three/examples/jsm/renderers/CSS3DRenderer.js";
-import { RGBELoader } from './node_modules/three/examples/jsm/loaders/RGBELoader.js';
 import { getScenePreset } from "./getScenePreset.js";
 
 function isMobileViewport() {
@@ -133,13 +132,15 @@ class App {
                 this.controls.update();
             }
 
-            const screenMarker = new THREE.Object3D();
+            const screenGeometry = new THREE.PlaneGeometry(1, 1); // Size will be scaled
+            const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
+            const screenMarker = new THREE.Mesh(screenGeometry, screenMaterial);
+
             screenMarker.name = "screenMarker";
-            // Set this position to match the screen location on your camera model.
-            // For example, if the screen is 0.2 units in front of the camera model’s origin:
             screenMarker.position.set(0.0135, 0.0625, -0.125);
             screenMarker.scale.set(0.000068, 0.000075, 0.00007);
-            screenMarker.rotation.y = Math.PI; // Rotate to face the camera
+            screenMarker.rotation.y = Math.PI;
+
             this.cameraModel.add(screenMarker);
 
             this.scene.add(this.cameraModel);
@@ -172,12 +173,64 @@ class App {
         });
     }
 
-    async _loadPlaylistVideos(playlistId) {
-        const API_KEY = 'AIzaSyCXrPjz9wCr2upv1iXAYwE5AbHP9wirWAo';
-        const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`);
-        if (!res.ok) return console.error("Failed to load videos");
-        const data = await res.json();
+    // FUTURE: for moving to youtube
+
+    // async _loadPlaylistVideos(playlistId) {
+    //     const API_KEY = 'AIzaSyCXrPjz9wCr2upv1iXAYwE5AbHP9wirWAo';
+    //     const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`);
+    //     if (!res.ok) return console.error("Failed to load videos");
+    //     const data = await res.json();
       
+    //     const container = document.getElementById("playlist-container");
+    //     container.innerHTML = `
+    //     <div class="playlist-header">
+    //         <h3 class="playlist-title">WithNSite</h3>
+    //         <img src="./assets/youtubelogo.png" alt="youtube logo" class="playlist-logo">
+    //     </div>`;
+
+    //     const playlistInner = document.createElement("div");
+    //     playlistInner.classList.add("playlist-inner");
+      
+    //     data.items.forEach(item => {
+    //         const { title, thumbnails, channelTitle, publishedAt, resourceId } = item.snippet;
+    //         const videoId = resourceId.videoId;
+        
+    //         const videoDiv = document.createElement("div");
+    //         videoDiv.classList.add("playlist-item");
+    //         videoDiv.innerHTML = `
+    //         <img src="${thumbnails.medium.url}" alt="${title}" class="thumb" />
+    //         <div class="meta">
+    //             <h4 class="title">${title}</h4>
+    //             <div class="small-text">
+    //                 <p class="channel">${channelTitle}</p>
+    //                 <p class="published">${timeSince(new Date(publishedAt))} ago</p>
+    //             </div>
+    //         </div>
+    //         `;
+        
+    //         videoDiv.addEventListener("click", () => {
+    //             this._changeIframeVideo(videoId); // define this to update the player
+    //         });
+            
+    //         playlistInner.appendChild(videoDiv);
+    //     });
+
+    //     container.appendChild(playlistInner);
+
+    //     function timeSince(date) {
+    //         const seconds = Math.floor((new Date() - date) / 1000);
+    //         const months = Math.floor(seconds / (30 * 24 * 3600));
+    //         const days = Math.floor(seconds / (24 * 3600));
+    //         if (months > 0) return `${months} month${months > 1 ? 's' : ''}`;
+    //         if (days > 0) return `${days} day${days > 1 ? 's' : ''}`;
+    //         return `${Math.floor(seconds / 3600)} hour${seconds > 3600 ? 's' : ''}`;
+    //     }
+    // }
+
+    // populate playlist container
+    _loadPlaylistVideos(){
+        const data = ['CGC News Promo.mp4', 'foodtruck promo.mp4', 'Ligiee concert promo vid .mp4', 'Fashion show promo.mp4', 'F da Persona - Preme Hardy.mp4', 'ART BANDO PROMO.mp4', 'Hardy In Da Paint - Preme Hardy.mp4'];
+
         const container = document.getElementById("playlist-container");
         container.innerHTML = `
         <div class="playlist-header">
@@ -188,40 +241,24 @@ class App {
         const playlistInner = document.createElement("div");
         playlistInner.classList.add("playlist-inner");
       
-        data.items.forEach(item => {
-            const { title, thumbnails, channelTitle, publishedAt, resourceId } = item.snippet;
-            const videoId = resourceId.videoId;
-        
+        data.forEach(path => {
             const videoDiv = document.createElement("div");
             videoDiv.classList.add("playlist-item");
             videoDiv.innerHTML = `
-            <img src="${thumbnails.medium.url}" alt="${title}" class="thumb" />
+            <img src="./assets/vids/${path}" alt="${path}" class="thumb" />
             <div class="meta">
-                <h4 class="title">${title}</h4>
-                <div class="small-text">
-                    <p class="channel">${channelTitle}</p>
-                    <p class="published">${timeSince(new Date(publishedAt))} ago</p>
-                </div>
+                <h4 class="title">${path}</h4>
             </div>
             `;
         
             videoDiv.addEventListener("click", () => {
-                this._changeIframeVideo(videoId); // define this to update the player
+                this._changeVideo(path); // define this to update the player
             });
             
             playlistInner.appendChild(videoDiv);
         });
 
         container.appendChild(playlistInner);
-
-        function timeSince(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            const months = Math.floor(seconds / (30 * 24 * 3600));
-            const days = Math.floor(seconds / (24 * 3600));
-            if (months > 0) return `${months} month${months > 1 ? 's' : ''}`;
-            if (days > 0) return `${days} day${days > 1 ? 's' : ''}`;
-            return `${Math.floor(seconds / 3600)} hour${seconds > 3600 ? 's' : ''}`;
-        }
     }
       
 
@@ -232,58 +269,71 @@ class App {
         wrapperDiv.style.width = "1200px";
         wrapperDiv.style.height = "800px";
 
-        const iframe = document.createElement("iframe");
-        iframe.style.width = "1200px";  // Adjust for screen size
-        iframe.style.height = "800px";
-        iframe.style.border = "none";
-        iframe.style.borderRadius = "16px";
-        iframe.src = "https://www.youtube.com/embed/2_n11Xfld4U"; // 
-        iframe.style.pointerEvents = "auto";
-        wrapperDiv.appendChild(iframe);
+        const videoElement = document.createElement("video");
+        videoElement.style.width = "1200px";
+        videoElement.style.height = "800px";
+        videoElement.style.border = "none";
+        videoElement.style.borderRadius = "16px";
+        videoElement.style.pointerEvents = "auto";
+        videoElement.style.backgroundColor = "#000"
+        videoElement.setAttribute("autoplay", true);
+        videoElement.setAttribute("muted", true); // Required for autoplay to work without user interaction
+        videoElement.setAttribute("controls", true);
+        videoElement.setAttribute("playsinline", true);
+
+        const source = document.createElement("source");
+        source.src = "./assets/vids/foodtruck promo.mp4";
+        source.type = "video/mp4"; // Or use video/mp4 if you convert to .mp4
+
+        videoElement.appendChild(source);
+        wrapperDiv.appendChild(videoElement);
 
 
         const pos = new THREE.Vector3(5, -110, 180);
         pos.normalize(); // makes it a unit vector (same direction, length = 1)
         pos.multiplyScalar(10); 
 
-        this.iFrameObject = new CSS3DObject(wrapperDiv);
-        this.iFrameObject.scale.set(1, 1, 1); // Scale it down for proper fit
+        this.videoObject = new CSS3DObject(wrapperDiv);
+        this.videoObject.scale.set(1, 1, 1); // Scale it down for proper fit
         this.cssRenderer.domElement.style.zIndex = "1000";
         this.controls.enabled = false;
 
         const marker = this.cameraModel.getObjectByName("screenMarker");
         if (marker) {
-            // Attach the iframe as a child of the marker so it automatically inherits the marker’s position & rotation.
-            marker.add(this.iFrameObject);
+            // Attach the videoObject as a child of the marker so it automatically inherits the marker’s position & rotation.
+            marker.add(this.videoObject);
         } else {
             console.error("Screen marker not found on cameraModel!");
         }
-        // this.cameraModel.add(this.iframeObject);
     }
 
     _removeIframeFromCamera() {
         const marker = this.cameraModel.getObjectByName("screenMarker");
 
         if (marker && this.cameraModel) {
-            marker.remove(this.iFrameObject);
-            this.iFrameObject = null;
+            marker.remove(this.videoObject);
+            this.videoObject = null;
         }
         // Reset pointer events to allow OrbitControls on home page
         this.cssRenderer.domElement.style.pointerEvents = "none";
     }
 
-    _changeIframeVideo(videoId) {
-        if (this.iFrameObject && this.iFrameObject.element) {
-            const iframe = this.iFrameObject.element.querySelector("iframe");
-            if (iframe) {
-                iframe.src = "";
-                iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                console.log("Changed video to", `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1&modestbranding=1&enablejsapi=1`);
+    _changeVideo(videoId) {
+        console.log("inside _changeVideo()");
+        if (this.videoObject && this.videoObject.element) {
+            const videoEle = this.videoObject.element.querySelector("video");
+            const source = this.videoObject.element.querySelector("source");
+
+            if (source && videoEle) {
+                source.src = "";
+                videoEle.load();
+                videoEle.play();
+                source.src = `./assets/vids/${videoId}`;
             } else {
-                console.warn("Iframe not found inside CSS3DObject.");
+                console.warn("video not found inside CSS3DObject.");
             }
         } else {
-            console.warn("iframeObject is not set.");
+            console.warn("videoObject is not set.");
         }
     }
 
@@ -620,7 +670,7 @@ class App {
             y: preset.modelPos2.y,
             z: preset.modelPos2.z,
             duration: 1.5,
-            ease: "slow(0.5, 0.5, false)",
+            ease: "power2.out",
             }, "-=0.125");
 
 
