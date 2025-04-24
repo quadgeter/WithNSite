@@ -520,6 +520,7 @@ body {
     z-index: 1000;
     transition: all 0.5s ease-in-out;
     display: flex;
+    justify-content: center;;
   }
 
   .footer.hidden {
@@ -685,6 +686,7 @@ body {
 .booking-section.shown {
   z-index: 9999;
   display: flex;
+  flex-direction: column;
   opacity: 1;
 }
 
