@@ -121,7 +121,7 @@ class App {
 
             screenMarker.name = "screenMarker";
             if (this.isMobile) {
-                screenMarker.position.set(0.0125, 0.0625, -0.125);
+                screenMarker.position.set(0.0125, 0.0675, -0.125);
             } else {
                 screenMarker.position.set(0.0125, 0.0625, -0.125);
             }
@@ -324,7 +324,7 @@ class App {
         playBtn.style.cursor = "pointer";
         playBtn.style.background = "transparent";
         playBtn.style.color = "white";
-        playBtn.style.zIndex = "1000";
+        playBtn.style.zIndex = "3000";
 
         // Play logic
         playBtn.onclick = () => {
@@ -346,7 +346,7 @@ class App {
         pauseBtn.style.bottom = "0";
         pauseBtn.style.left = "0";
         pauseBtn.style.transform = "translate(50%)";
-        pauseBtn.style.zIndex = "1000";
+        pauseBtn.style.zIndex = "3000";
         pauseBtn.style.padding = "0.5rem 1rem";
         pauseBtn.style.fontSize = "4rem";
         pauseBtn.style.cursor = "pointer";
