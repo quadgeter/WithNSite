@@ -97,14 +97,14 @@ body {
     top: 0;
     left: 0;
     background-color: transparent;
-    color: #333;
+    color: #444;
     display: none;
     border: none;
     cursor: pointer;
     z-index: -1;
     font-size: 3rem;
     font-weight: 700;
-    text-shadow: 0 2px 2px #666;
+    text-shadow: 0 4px 6px rgba(255, 255, 255, 0.6);
     transition: opacity 0.75s;
     transition: transform 0.1s ease-in-out;
     transform-origin: left center;
@@ -528,6 +528,14 @@ body {
     display: none;
     z-index: -1;
   }
+
+  .footer-link {
+    text-decoration: none;
+  }
+
+  .footer-link p {
+    color: #666;
+  } 
 
   .socials i{
     font-size: 1.5rem;

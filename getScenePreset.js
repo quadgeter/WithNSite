@@ -8,8 +8,8 @@ export function getScenePreset(view, isMobile) {
                 cameraPos: { x: 0.25, y: 0.15, z: 0.25 }
             },
             mobile: {
-                modelPos: { x: 7.5, y: -2.5, z: 3 },
-                modelRot: { x: 0, y: -2.5, z: 0 },
+                modelPos: { x: 7.5, y: -3.5, z: 3 },
+                modelRot: { x: 0, y: -2.25, z: 0 },
                 modelScale: { x: 20, y: 20, z: 15 },
                 cameraPos: { x: 0.25, y: 0.15, z: 0.25 }
             }

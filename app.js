@@ -108,8 +108,8 @@ class App {
             if (isMobileViewport()) {
                 // this.camera.far = 100;
                 this.cameraModel.scale.set(20,20,15);
-                this.cameraModel.rotation.y = -2.5;
-                this.cameraModel.position.set(7.5,-2.5,3 );
+                this.cameraModel.rotation.y = -2.35;
+                this.cameraModel.position.set(7.5,-3.5,3 );
                 // this.camera.position.y -= 15;
                 // this._animateFOV(75);
                 this.controls.target.set(7.5,0,3);
