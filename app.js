@@ -218,40 +218,52 @@ class App {
     _loadPlaylistVideos(){
         const data = {
             'ase4_sfull.mp4': {
-                title: "Hype Clinic Commericial"
+                title: "Hype Clinic Commericial",
+                thumbnail: "thumbnail_ase4_sfull.png"
             },
             'community prayer story.mp4': {
-                title: "CGC News Production"
+                title: "CGC News Production",
+                thumbnail: "thumbnail_cgc.png"
             }, 
             'foodtruck promo.mp4': {
-                title: "Food Truck Commercial Production"
+                title: "Food Truck Commercial Production",
+                thumbnail: "thumbnail_grillville.png"
             },
             'tweakin visual 30 secs.mp4': {
-                title: "Tweakin - Music Video"
+                title: "Tweakin - Music Video",
+                thumbnail: "thumbnail_tweakin.png"
             }, 
             'Ligiee concert promo vid.mp4': {
-                title: "Local Artist Concert Promotion"
+                title: "Local Artist Concert Promotion",
+                thumbnail: "thumbnail_Ligieeconcert.png"
             },
             "kotadoc1.mp4": {
-                title: "Track & Field Documentary"
+                title: "Track & Field Documentary",
+                thumbnail: "thumbnail_kotadoc.png"
             } ,
             "kotareel1.mp4": {
-                title: "Track & Field Mix Part 1"
+                title: "Track & Field Mix Part 1",
+                thumbnail: "thumbnail_kotareel1.png"
             },
             "kotareel2.mp4": {
-                title: "Track & Field Mix Part 2"
+                title: "Track & Field Mix Part 2",
+                thumbnail: "thumbnail_kotareel2.png"
             },
             'Fashion show promo.mp4': {
-                title: "2023 Fashion Show"
+                title: "2023 Fashion Show",
+                thumbnail: "thumbnail_fashion show.png"
             }, 
             'F da Persona - Preme Hardy.mp4': {
-                title: "F da Persona - Preme Hardy Music Video"
+                title: "F da Persona - Preme Hardy Music Video",
+                thumbnail: "thumbnail_fdapersona.png"
             }, 
             'ART BANDO PROMO.mp4': {
-                title: "Mutlimedia Mix"
+                title: "Mutlimedia Mix",
+                thumbnail: "thumbnail_chain.png"
             }, 
             'Hardy In Da Paint - Preme Hardy.mp4': {
-                title: "Hardy In Da Paint - Preme Hardy Music Video"
+                title: "Hardy In Da Paint - Preme Hardy Music Video",
+                thumbnail: "thumbnail_hardindapaint.png"
             }
         };
 
@@ -270,6 +282,7 @@ class App {
             videoDiv.innerHTML = `
             
             <div class="meta">
+                <img class="thumb" src="./assets/vids/thumbnails/${info.thumbnail}"> 
                 <h4 class="title">${info.title}</h4>
             </div>
             `;
