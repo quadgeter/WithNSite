@@ -230,7 +230,6 @@ class App {
             const videoDiv = document.createElement("div");
             videoDiv.classList.add("playlist-item");
             videoDiv.innerHTML = `
-            <img src="./assets/vids/${path}" alt="${path}" class="thumb" />
             <div class="meta">
                 <h4 class="title">${path}</h4>
             </div>
