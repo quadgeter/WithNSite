@@ -254,16 +254,16 @@ class App {
     _addIframeToCamera() {
         const wrapperDiv = document.createElement("div");
         if (this.isMobile) {
-            wrapperDiv.style.width = "1200px";
-            wrapperDiv.style.height = "800px";
+            wrapperDiv.style.width = "400px";
+            wrapperDiv.style.height = "300px";
         } else {
             // wrapperDiv.style.width = "100%";
             // wrapperDiv.style.height = "100%";
         }
         
         const videoElement = document.createElement("video");
-        videoElement.style.width = "1200px";
-        videoElement.style.height = "800px";
+        videoElement.style.width = "400px";
+        videoElement.style.height = "300px";
         videoElement.style.border = "none";
         videoElement.style.borderRadius = "16px";
         videoElement.style.pointerEvents = "auto";
