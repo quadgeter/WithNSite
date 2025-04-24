@@ -216,30 +216,54 @@ class App {
 
     // populate playlist container
     _loadPlaylistVideos(){
-        const data = ['CGC News Promo.mp4', 'foodtruck promo.mp4', 'Ligiee concert promo vid .mp4', 'Fashion show promo.mp4', 'F da Persona - Preme Hardy.mp4', 'ART BANDO PROMO.mp4', 'Hardy In Da Paint - Preme Hardy.mp4'];
+        const data = {
+            '(ase4_sfull.mp4': {
+                title: "Hype Clinic Commericial"
+            },
+            'community prayer story.mp4': {
+                title: "CGC News Production"
+            }, 
+            'foodtruck promo.mp4': {
+                title: "Food Truck Commercial Production"
+            }, 
+            'Ligiee concert promo vid.mp4': {
+                title: "Local Artist Concert Promotion"
+            }, 
+            'Fashion show promo.mp4': {
+                title: "2023 Fashion Show"
+            }, 
+            'F da Persona - Preme Hardy.mp4': {
+                title: "F da Persona - Preme Hardy Music Video"
+            }, 
+            'ART BANDO PROMO.mp4': {
+                title: "Mutlimedia Mix"
+            }, 
+            'Hardy In Da Paint - Preme Hardy.mp4': {
+                title: "F da Persona - Preme Hardy Music Video"
+            }
+        };
 
         const container = document.getElementById("playlist-container");
         container.innerHTML = `
         <div class="playlist-header">
-            <h3 class="playlist-title">WithNSite</h3>
-            <img src="./assets/youtubelogo.png" alt="youtube logo" class="playlist-logo">
+            <h3 class="playlist-title">Check Out Some of Our Work</h3>
         </div>`;
 
         const playlistInner = document.createElement("div");
         playlistInner.classList.add("playlist-inner");
       
-        data.forEach(path => {
+        Object.entries(data).forEach(([fileName, info]) => {
             const videoDiv = document.createElement("div");
             videoDiv.classList.add("playlist-item");
             videoDiv.innerHTML = `
             
             <div class="meta">
-                <h4 class="title">${path}</h4>
+                <h4 class="title">${info.title}</h4>
             </div>
             `;
         
             videoDiv.addEventListener("click", () => {
-                this._changeVideo(path); // define this to update the player
+                this._changeVideo(fileName, info); // define this to update the player
             });
             
             playlistInner.appendChild(videoDiv);
@@ -275,7 +299,7 @@ class App {
         videoElement.setAttribute("webkit-playsinline", true);
 
         const source = document.createElement("source");
-        source.src = "./assets/vids/foodtruck promo.mp4";
+        source.src = "./assets/vids/(ase4_sfull.mp4";
         source.type = "video/mp4"; // Or use video/mp4 if you convert to .mp4
 
         videoElement.appendChild(source);
