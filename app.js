@@ -272,7 +272,7 @@ class App {
         videoElement.setAttribute("muted", true); // Required for autoplay to work without user interaction
         videoElement.removeAttribute("controls");
         videoElement.setAttribute("playsinline", true);
-        // videoElement.setAttribute("webkit-playsinline", true);
+        videoElement.setAttribute("webkit-playsinline", true);
 
         const source = document.createElement("source");
         source.src = "./assets/vids/foodtruck promo.mp4";
@@ -281,6 +281,56 @@ class App {
         videoElement.appendChild(source);
         wrapperDiv.appendChild(videoElement);
 
+        const playBtn = document.createElement("button");
+        playBtn.innerText = "▶";
+        playBtn.style.position = "absolute";
+        playBtn.style.top = "50%";
+        playBtn.style.left = "50%";
+        playBtn.style.transform = "translate(-50%, -50%)";
+        playBtn.style.fontSize = "2rem";
+        playBtn.style.padding = "0.75rem 1rem";
+        playBtn.style.border = "none";
+        playBtn.style.borderRadius = "10px";
+        playBtn.style.cursor = "pointer";
+        playBtn.style.background = "rgba(0, 0, 0, 0.7)";
+        playBtn.style.color = "white";
+        playBtn.style.zIndex = "1000";
+
+        // Play logic
+        playBtn.onclick = () => {
+            if (videoElement.paused) {
+                videoElement.play();
+                playBtn.style.display = "none";
+                pauseBtn.style.display = "block";
+            }
+        };
+
+        videoElement.onplay = () => playBtn.style.display = "none";
+        videoElement.onpause = () => playBtn.style.display = "block";
+
+        wrapperDiv.appendChild(playBtn);
+
+        const pauseBtn = document.createElement("button");
+        pauseBtn.innerText = "⏸";
+        pauseBtn.style.position = "absolute";
+        pauseBtn.style.bottom = "10px";
+        pauseBtn.style.left = "20px";
+        pauseBtn.style.zIndex = "10";
+        pauseBtn.style.padding = "0.5rem 1rem";
+        pauseBtn.style.fontSize = "2.5rem";
+        pauseBtn.style.cursor = "pointer";
+        pauseBtn.style.backgroundColor = "transparent";
+        pauseBtn.style.color = "white";
+        pauseBtn.style.border = "none";
+        pauseBtn.onclick = () => {
+            if (!videoElement.paused) {
+                videoElement.pause();
+                playBtn.style.display = "block";
+                pauseBtn.style.display = "none";
+            } 
+        };
+
+        wrapperDiv.appendChild(pauseBtn);
 
         const pos = new THREE.Vector3(5, -110, 180);
         pos.normalize(); // makes it a unit vector (same direction, length = 1)
