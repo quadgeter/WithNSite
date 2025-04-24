@@ -228,7 +228,13 @@ class App {
             }, 
             'Ligiee concert promo vid.mp4': {
                 title: "Local Artist Concert Promotion"
-            }, 
+            },
+            "kotadoc1.mp4": {
+                title: "Track & Field Mix Part 1"
+            } ,
+            "kotadoc2.mp4": {
+                title: "Track & Field Mix Part 2"
+            },
             'Fashion show promo.mp4': {
                 title: "2023 Fashion Show"
             }, 
