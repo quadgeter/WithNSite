@@ -268,7 +268,7 @@ class App {
         videoElement.style.borderRadius = "16px";
         videoElement.style.pointerEvents = "auto";
         videoElement.style.backgroundColor = "#000"
-        videoElement.setAttribute("autoplay", true);
+        videoElement.setAttribute("autoplay", false);
         videoElement.setAttribute("muted", true); // Required for autoplay to work without user interaction
         videoElement.removeAttribute("controls");
         videoElement.setAttribute("playsinline", true);
@@ -284,15 +284,15 @@ class App {
         const playBtn = document.createElement("button");
         playBtn.innerText = "▶";
         playBtn.style.position = "absolute";
-        playBtn.style.top = "50%";
+        playBtn.style.top = "35%";
         playBtn.style.left = "50%";
         playBtn.style.transform = "translate(-50%, -50%)";
-        playBtn.style.fontSize = "2rem";
+        playBtn.style.fontSize = "6rem";
         playBtn.style.padding = "0.75rem 1rem";
         playBtn.style.border = "none";
         playBtn.style.borderRadius = "10px";
         playBtn.style.cursor = "pointer";
-        playBtn.style.background = "rgba(0, 0, 0, 0.7)";
+        playBtn.style.background = "transparent";
         playBtn.style.color = "white";
         playBtn.style.zIndex = "1000";
 
@@ -313,11 +313,12 @@ class App {
         const pauseBtn = document.createElement("button");
         pauseBtn.innerText = "⏸";
         pauseBtn.style.position = "absolute";
-        pauseBtn.style.bottom = "10px";
-        pauseBtn.style.left = "20px";
-        pauseBtn.style.zIndex = "10";
+        pauseBtn.style.top = "60%";
+        pauseBtn.style.left = "0";
+        pauseBtn.style.transform = "translate(50%)";
+        pauseBtn.style.zIndex = "1000";
         pauseBtn.style.padding = "0.5rem 1rem";
-        pauseBtn.style.fontSize = "2.5rem";
+        pauseBtn.style.fontSize = "4rem";
         pauseBtn.style.cursor = "pointer";
         pauseBtn.style.backgroundColor = "transparent";
         pauseBtn.style.color = "white";
