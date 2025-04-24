@@ -23,14 +23,14 @@ class App {
         this.loader = new THREE.TextureLoader();
 
         this.renderer = new THREE.WebGLRenderer({ 
-            antialias: !isMobile 
+            antialias: !this.isMobile 
         });
 
         this.renderer.setSize(width,height);
         const container = document.getElementById("threejs-container");
         this.renderer.domElement.style.position = "absolute";
         this.renderer.domElement.style.zIndex = "1";
-        this.renderer.shadowMap.enabled = !isMobile; 
+        this.renderer.shadowMap.enabled = !this.isMobile; 
         // container.appendChild(this.renderer.domElement);
         container.appendChild(this.renderer.domElement);
 
