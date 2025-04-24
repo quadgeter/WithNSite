@@ -22,11 +22,15 @@ class App {
         const height = window.innerHeight;
         this.loader = new THREE.TextureLoader();
 
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer = new THREE.WebGLRenderer({ 
+            antialias: !isMobile 
+        });
+
         this.renderer.setSize(width,height);
         const container = document.getElementById("threejs-container");
         this.renderer.domElement.style.position = "absolute";
-        this.renderer.domElement.style.zIndex = "1"; 
+        this.renderer.domElement.style.zIndex = "1";
+        this.renderer.shadowMap.enabled = !isMobile; 
         // container.appendChild(this.renderer.domElement);
         container.appendChild(this.renderer.domElement);
 
