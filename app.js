@@ -125,7 +125,7 @@ class App {
             } else {
                 screenMarker.position.set(0.0125, 0.0625, -0.125);
             }
-            screenMarker.scale.set(0.000068, 0.000075, 0.00007);
+            screenMarker.scale.set(0.000068, 0.00007, 0.00007);
             screenMarker.rotation.y = Math.PI;
 
             this.cameraModel.add(screenMarker);
@@ -255,7 +255,7 @@ class App {
         const wrapperDiv = document.createElement("div");
         if (this.isMobile) {
             wrapperDiv.style.width = "1200px";
-            wrapperDiv.style.height = "1200px%";
+            wrapperDiv.style.height = "1200px";
         } else {
             // wrapperDiv.style.width = "100%";
             // wrapperDiv.style.height = "100%";
