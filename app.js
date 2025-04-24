@@ -25,7 +25,7 @@ class App {
         this.renderer = new THREE.WebGLRenderer({ 
             antialias: !this.isMobile,
             alpha: true,
-            preserveDrawingBuffer: !this.isMobile 
+            // preserveDrawingBuffer: !this.isMobile 
         });
 
         this.renderer.setSize(width,height);
