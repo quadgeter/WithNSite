@@ -121,7 +121,7 @@ class App {
 
             screenMarker.name = "screenMarker";
             if (this.isMobile) {
-                screenMarker.position.set(0.0125, 0.055, -0.125);
+                screenMarker.position.set(0.0125, 0.0625, -0.125);
             } else {
                 screenMarker.position.set(0.0125, 0.0625, -0.125);
             }
@@ -285,7 +285,7 @@ class App {
         const wrapperDiv = document.createElement("div");
         if (this.isMobile) {
             wrapperDiv.style.width = "1200px";
-            wrapperDiv.style.height = "1200px";
+            wrapperDiv.style.height = "800px";
         } else {
             // wrapperDiv.style.width = "100%";
             // wrapperDiv.style.height = "100%";
@@ -298,7 +298,7 @@ class App {
         videoElement.style.borderRadius = "16px";
         videoElement.style.pointerEvents = "auto";
         videoElement.style.backgroundColor = "#000"
-        videoElement.setAttribute("autoplay", false);
+        videoElement.setAttribute("autoplay", true);
         videoElement.setAttribute("muted", true); // Required for autoplay to work without user interaction
         videoElement.removeAttribute("controls");
         videoElement.setAttribute("playsinline", true);
@@ -312,9 +312,9 @@ class App {
         wrapperDiv.appendChild(videoElement);
 
         const playBtn = document.createElement("button");
-        playBtn.innerText = "▶";
+        playBtn.innerHTML = "<i class='fa-solid fa-play'></i>";
         playBtn.style.position = "absolute";
-        playBtn.style.top = "35%";
+        playBtn.style.top = "50%";
         playBtn.style.left = "50%";
         playBtn.style.transform = "translate(-50%, -50%)";
         playBtn.style.fontSize = "6rem";
@@ -341,9 +341,9 @@ class App {
         wrapperDiv.appendChild(playBtn);
 
         const pauseBtn = document.createElement("button");
-        pauseBtn.innerText = "⏸";
+        pauseBtn.innerHTML = "<i class='fa-solid fa-pause'></i>";
         pauseBtn.style.position = "absolute";
-        pauseBtn.style.top = "60%";
+        pauseBtn.style.bottom = "0";
         pauseBtn.style.left = "0";
         pauseBtn.style.transform = "translate(50%)";
         pauseBtn.style.zIndex = "1000";
