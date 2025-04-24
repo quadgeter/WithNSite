@@ -815,7 +815,7 @@ class App {
     
 
     _RAF() {
-        requestAnimationFrame((t = 0) => {
+        requestAnimationFrame(() => {
             this.controls.update();
             this.renderer.render(this.scene, this.camera);
             this.cssRenderer.render(this.scene, this.camera);
