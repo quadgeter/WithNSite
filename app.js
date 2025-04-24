@@ -121,11 +121,11 @@ class App {
 
             screenMarker.name = "screenMarker";
             if (this.isMobile) {
-                screenMarker.position.set(0.0125, 0.07, -0.125);
+                screenMarker.position.set(0.0125, 0.0625, -0.125);
             } else {
                 screenMarker.position.set(0.0125, 0.0625, -0.125);
             }
-            screenMarker.scale.set(0.000068, 0.00007, 0.00007);
+            screenMarker.scale.set(0.000068, 0.000075, 0.00007);
             screenMarker.rotation.y = Math.PI;
 
             this.cameraModel.add(screenMarker);
