@@ -98,8 +98,6 @@ class App {
             this.cameraModel.rotation.y = -Math.PI + 0.75;
             
             this.cameraModel.scale.set(320, 350, 320);
-            const axesHelper = new THREE.AxesHelper(0.5); // Adjust size as needed
-            this.cameraModel.add(axesHelper);
 
             if (isMobileViewport()) {
                 // this.camera.far = 100;
