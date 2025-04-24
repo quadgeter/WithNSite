@@ -42,6 +42,7 @@ body {
 #main-nav.hidden{
     opacity: 0;
     z-index: -1;
+    display: flex;
 }
 
 
@@ -97,7 +98,7 @@ body {
     left: 0;
     background-color: transparent;
     color: #333;
-    opacity: 0;
+    display: none;
     border: none;
     cursor: pointer;
     z-index: -1;
@@ -113,6 +114,7 @@ body {
 #back-btn.shown {
     opacity: 1;
     z-index: 10000;
+    display: flex;
 }
 
 #back-btn:hover, .nav-btn:hover{
@@ -134,14 +136,15 @@ body {
     border: 1px solid white;
     padding: 0;
     opacity: 0;
+    display: none;;
     transition: opacity 1s;
-    display: flex;
-    flex-direction: column;
 }
 
 #playlist-container.shown {
     opacity: 1;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 .playlist-header {
@@ -165,8 +168,7 @@ body {
     border-bottom-right-radius: 12px;
     scroll-behavior: smooth;
     height: fit-content;
-    backdrop-filter: blur(10px);         /* the blur effect */
-    -webkit-backdrop-filter: blur(10px)
+    background-color: rgba(0,0,0,0.3);      /* the blur effect */
 }
 
 .playlist-inner::-webkit-scrollbar {
@@ -241,13 +243,12 @@ body {
 .lookbook-container {
     z-index: -1;
     opacity: 0;
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     transition: opacity 0.3s;
@@ -260,6 +261,8 @@ body {
 .lookbook-container.shown {
     opacity: 1;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
 }
 
 .lookbook-title {
@@ -331,18 +334,19 @@ body {
     color: white;
     z-index: -1;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
     opacity: 0;
+    display: none;
     transition: opacity 1s ease-in-out;
 }
 
 #services-panel.shown {
     opacity: 1;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
 }
 
 #services-panel h1 {
@@ -515,10 +519,12 @@ body {
     font-size: 1rem;
     z-index: 1000;
     transition: all 0.5s ease-in-out;
+    display: flex;
   }
 
   .footer.hidden {
     opacity: 0;
+    display: none;
     z-index: -1;
   }
 
@@ -536,12 +542,14 @@ body {
 .lookbook-content {
   background-color: rgba(0,0,0,0.5);
   opacity: 0;
+  display: none;
   z-index: -1;
 }
 
 .lookbook-content.shown{
   opacity: 1;
   z-index: 9999;
+  display: flex;
 }
 
 .outer {
@@ -622,6 +630,7 @@ body {
 
 .about-section {
   opacity: 0;
+  display: none;;
   position: absolute;
   top: 5%;
   right: 3%;
@@ -631,14 +640,14 @@ body {
   box-sizing: border-box;
   background: transparent;
   transition: opacity 1s;
-  display: flex;
-  flex-direction: column;
   align-items: flex-end;
 }
 
 .about-section.shown {
   opacity: 1;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -667,6 +676,7 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   opacity: 0;
+  display: none;
   transition: all 0.5s ease-in-out;
   z-index: -1;
   height: 85%;
@@ -674,6 +684,7 @@ body {
 
 .booking-section.shown {
   z-index: 9999;
+  display: flex;
   opacity: 1;
 }
 
