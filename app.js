@@ -250,8 +250,8 @@ class App {
 
     _addIframeToCamera() {
         const wrapperDiv = document.createElement("div");
-        wrapperDiv.style.width = "100%";
-        wrapperDiv.style.height = "100%";
+        wrapperDiv.style.width = "1200px";
+        wrapperDiv.style.height = "800px";
 
         const videoElement = document.createElement("video");
         videoElement.style.width = "100%";
