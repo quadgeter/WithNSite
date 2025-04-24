@@ -117,13 +117,11 @@ class App {
                 this.controls.update();
             }
 
-            const screenGeometry = new THREE.PlaneGeometry(1, 1); // Size will be scaled
-            const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
-            const screenMarker = new THREE.Mesh(screenGeometry, screenMaterial);
+            const screenMarker = new THREE.Object3D();
 
             screenMarker.name = "screenMarker";
-            screenMarker.position.set(0.01355, 0.0625, -0.125);
-            screenMarker.scale.set(0.000086, 0.0000855, 0.0000725);
+            screenMarker.position.set(0.0135, 0.0625, -0.125);
+            screenMarker.scale.set(0.000068, 0.000075, 0.00007);
             screenMarker.rotation.y = Math.PI;
 
             this.cameraModel.add(screenMarker);
@@ -252,16 +250,16 @@ class App {
     _addIframeToCamera() {
         const wrapperDiv = document.createElement("div");
         if (this.isMobile) {
-            wrapperDiv.style.width = "1000px";
-            wrapperDiv.style.height = "775px";
+            wrapperDiv.style.width = "1200px";
+            wrapperDiv.style.height = "800px";
         } else {
-            wrapperDiv.style.width = "100%";
-            wrapperDiv.style.height = "100%";
+            // wrapperDiv.style.width = "100%";
+            // wrapperDiv.style.height = "100%";
         }
         
         const videoElement = document.createElement("video");
-        videoElement.style.width = "100%";
-        videoElement.style.height = "100%";
+        videoElement.style.width = "1200px";
+        videoElement.style.height = "800px";
         videoElement.style.border = "none";
         videoElement.style.borderRadius = "16px";
         videoElement.style.pointerEvents = "auto";
@@ -270,7 +268,7 @@ class App {
         videoElement.setAttribute("muted", true); // Required for autoplay to work without user interaction
         videoElement.setAttribute("controls", true);
         videoElement.setAttribute("playsinline", true);
-        videoElement.setAttribute("webkit-playsinline", true);
+        // videoElement.setAttribute("webkit-playsinline", true);
 
         const source = document.createElement("source");
         source.src = "./assets/vids/foodtruck promo.mp4";
