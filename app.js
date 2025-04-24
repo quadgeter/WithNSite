@@ -233,9 +233,12 @@ class App {
                 title: "Local Artist Concert Promotion"
             },
             "kotadoc1.mp4": {
-                title: "Track & Field Mix Part 1"
+                title: "Track & Field Documentary"
             } ,
-            "kotadoc2.mp4": {
+            "kotareel1.mp4": {
+                title: "Track & Field Mix Part 1"
+            },
+            "kotareel2.mp4": {
                 title: "Track & Field Mix Part 2"
             },
             'Fashion show promo.mp4': {
