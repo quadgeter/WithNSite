@@ -217,7 +217,7 @@ class App {
     // populate playlist container
     _loadPlaylistVideos(){
         const data = {
-            '(ase4_sfull.mp4': {
+            'ase4_sfull.mp4': {
                 title: "Hype Clinic Commericial"
             },
             'community prayer story.mp4': {
@@ -245,7 +245,7 @@ class App {
                 title: "Mutlimedia Mix"
             }, 
             'Hardy In Da Paint - Preme Hardy.mp4': {
-                title: "F da Persona - Preme Hardy Music Video"
+                title: "Hardy In Da Paint - Preme Hardy Music Video"
             }
         };
 
@@ -305,7 +305,7 @@ class App {
         videoElement.setAttribute("webkit-playsinline", true);
 
         const source = document.createElement("source");
-        source.src = "./assets/vids/(ase4_sfull.mp4";
+        source.src = "./assets/vids/ase4_sfull.mp4";
         source.type = "video/mp4"; // Or use video/mp4 if you convert to .mp4
 
         videoElement.appendChild(source);
