@@ -120,8 +120,12 @@ class App {
             const screenMarker = new THREE.Object3D();
 
             screenMarker.name = "screenMarker";
-            screenMarker.position.set(0.0135, 0.0625, -0.125);
-            screenMarker.scale.set(0.000068, 0.0000775, 0.00007);
+            if (this.isMobile) {
+                screenMarker.position.set(0.0135, 0.0675, -0.125);
+            } else {
+                screenMarker.position.set(0.0135, 0.0625, -0.125);
+            }
+            screenMarker.scale.set(0.000068, 0.000075, 0.00007);
             screenMarker.rotation.y = Math.PI;
 
             this.cameraModel.add(screenMarker);
