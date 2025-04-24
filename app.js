@@ -265,6 +265,7 @@ class App {
         videoElement.setAttribute("muted", true); // Required for autoplay to work without user interaction
         videoElement.setAttribute("controls", true);
         videoElement.setAttribute("playsinline", true);
+        videoElement.setAttribute("webkit-playsinline", true);
 
         const source = document.createElement("source");
         source.src = "./assets/vids/foodtruck promo.mp4";
