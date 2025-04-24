@@ -121,7 +121,7 @@ class App {
 
             screenMarker.name = "screenMarker";
             if (this.isMobile) {
-                screenMarker.position.set(0.0125, 0.05, -0.125);
+                screenMarker.position.set(0.0125, 0.055, -0.125);
             } else {
                 screenMarker.position.set(0.0125, 0.0625, -0.125);
             }
