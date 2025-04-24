@@ -23,9 +23,9 @@ class App {
         this.loader = new THREE.TextureLoader();
 
         this.renderer = new THREE.WebGLRenderer({ 
-            antialias: !this.isMobile,
-            alpha: true,
-            // preserveDrawingBuffer: !this.isMobile 
+            antialias: false,
+            // alpha: true,
+            preserveDrawingBuffer: !this.isMobile 
         });
 
         this.renderer.setSize(width,height);
