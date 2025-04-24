@@ -122,8 +122,8 @@ class App {
             const screenMarker = new THREE.Mesh(screenGeometry, screenMaterial);
 
             screenMarker.name = "screenMarker";
-            screenMarker.position.set(0.0135, 0.0625, -0.125);
-            screenMarker.scale.set(0.000085, 0.00008, 0.0000725);
+            screenMarker.position.set(0.01355, 0.0625, -0.125);
+            screenMarker.scale.set(0.000086, 0.0000855, 0.0000725);
             screenMarker.rotation.y = Math.PI;
 
             this.cameraModel.add(screenMarker);
@@ -230,6 +230,7 @@ class App {
             const videoDiv = document.createElement("div");
             videoDiv.classList.add("playlist-item");
             videoDiv.innerHTML = `
+            
             <div class="meta">
                 <h4 class="title">${path}</h4>
             </div>
@@ -250,9 +251,14 @@ class App {
 
     _addIframeToCamera() {
         const wrapperDiv = document.createElement("div");
-        wrapperDiv.style.width = "1200px";
-        wrapperDiv.style.height = "800px";
-
+        if (this.isMobile) {
+            wrapperDiv.style.width = "1000px";
+            wrapperDiv.style.height = "775px";
+        } else {
+            wrapperDiv.style.width = "100%";
+            wrapperDiv.style.height = "100%";
+        }
+        
         const videoElement = document.createElement("video");
         videoElement.style.width = "100%";
         videoElement.style.height = "100%";
