@@ -1,9 +1,7 @@
 function sendEmail(e) {
-  e.preventDefault();
-
   emailjs.sendForm(
     'service_f3petev',
-    'template_szjt0kk',
+    'template_abouckx',
     e.target,
     'tGpRMPWgA3I6GyErH' // Public key
   ).then(
