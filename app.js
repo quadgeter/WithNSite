@@ -333,10 +333,11 @@ class App {
         const playBtn = document.createElement("button");
         playBtn.innerHTML = "<i class='fa-solid fa-play'></i>";
         playBtn.style.position = "absolute";
+        playBtn.className = "playBtn";
         playBtn.style.top = "50%";
         playBtn.style.left = "50%";
         playBtn.style.transform = "translate(-50%, -50%)";
-        playBtn.style.fontSize = "6rem";
+        playBtn.style.fontSize = "10rem";
         playBtn.style.padding = "0.75rem 1rem";
         playBtn.style.border = "none";
         playBtn.style.borderRadius = "10px";
@@ -361,6 +362,7 @@ class App {
 
         const pauseBtn = document.createElement("button");
         pauseBtn.innerHTML = "<i class='fa-solid fa-pause'></i>";
+        pauseBtn.className = "pauseBtn";
         pauseBtn.style.position = "absolute";
         pauseBtn.style.bottom = "0";
         pauseBtn.style.left = "0";
@@ -411,17 +413,21 @@ class App {
         this.cssRenderer.domElement.style.pointerEvents = "none";
     }
 
-    _changeVideo(videoId) {
+    _changeVideo(fileName, info) {
         console.log("inside _changeVideo()");
         if (this.videoObject && this.videoObject.element) {
             const videoEle = this.videoObject.element.querySelector("video");
             const source = this.videoObject.element.querySelector("source");
+            const playBtn = this.videoObject.element.querySelector(".playBtn")
+            const pauseBtn = this.videoObject.element.querySelector(".pauseBtn")
+
 
             if (source && videoEle) {
                 source.src = "";
+                source.src = `./assets/vids/${fileName}`;
                 videoEle.load();
                 videoEle.play();
-                source.src = `./assets/vids/${videoId}`;
+                pauseBtn.style.display = "block";
             } else {
                 console.warn("video not found inside CSS3DObject.");
             }

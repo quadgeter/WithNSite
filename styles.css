@@ -204,8 +204,8 @@ body {
     background: rgba(0,0,0,0.05);
 }
 .playlist-item .thumb {
-    width: 150px;
-    height: auto;
+    width: 100px;
+    height: 100%;
     border-radius: 8px 0 0 8px;
 }
 .playlist-item .meta {
