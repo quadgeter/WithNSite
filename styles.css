@@ -790,6 +790,7 @@ body {
   width: 50%;
   height: 10px;
   background-color: #333;
+  margin-top: 2rem;
 }
 
 #loading-bar {
