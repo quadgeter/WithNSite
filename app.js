@@ -3,6 +3,7 @@ import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
 import { CSS3DRenderer, CSS3DObject } from "https://unpkg.com/three/examples/jsm/renderers/CSS3DRenderer.js";
 import { getScenePreset } from "./getScenePreset.js";
+import { LoadingManager } from "three";
 
 function isMobileViewport() {
     return window.innerWidth <= 768; // or 767, depending on your mobile breakpoint
@@ -20,7 +21,37 @@ class App {
         this.pageState = "home";
         const width = window.innerWidth;
         const height = window.innerHeight;
+
+        this.loadingManager = new THREE.LoadingManager();
+
+        this.loadingManager.onProgress = (url, loaded, total) => {
+            const percent = (loaded / total) * 100;
+            console.log("loading...");
+            updateLoadingScreen(percent);
+        };
+        
+        this.loadingManager.onLoad = () => {
+            setTimeout(() => {
+                hideLoadingScreen();
+            }, 500);
+        };
+
+        function updateLoadingScreen(percent) {
+            const svgFill = document.querySelector('#loading-bar');
+            svgFill.style.width = `${percent}%`;
+            console.log("Percent:", percent);
+        }
+
+        function hideLoadingScreen() {
+            const loadingScreen = document.querySelector('#loading-screen');
+            loadingScreen.style.opacity = 0;
+            setTimeout(() => {
+                loadingScreen.style.display = "none";
+            }, 500);
+        }
+
         this.loader = new THREE.TextureLoader();
+          
 
         this.renderer = new THREE.WebGLRenderer({ 
             antialias: false,
@@ -91,7 +122,7 @@ class App {
 
      
     _LoadModel() { 
-        const loader = new GLTFLoader();
+        const loader = new GLTFLoader(this.loadingManager);
         loader.load('./assets/models/unbranded_camera.gltf', (gltf) => { 
             gltf.scene.traverse(c => {
                 c.castShadow = false;
@@ -369,7 +400,7 @@ class App {
         pauseBtn.style.transform = "translate(50%)";
         pauseBtn.style.zIndex = "3000";
         pauseBtn.style.padding = "0.5rem 1rem";
-        pauseBtn.style.fontSize = "4rem";
+        pauseBtn.style.fontSize = "6rem";
         pauseBtn.style.cursor = "pointer";
         pauseBtn.style.backgroundColor = "transparent";
         pauseBtn.style.color = "white";
