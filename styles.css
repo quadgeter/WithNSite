@@ -52,6 +52,18 @@ body {
     height: auto;
 }
 
+#logo-canvas {
+    width: 120px;
+    height: 120px;
+    display: block;
+    cursor: grab;
+    touch-action: none;
+}
+
+#logo-canvas:active {
+    cursor: grabbing;
+}
+
 #main-nav ul {
     list-style: none;
     display: flex;
