@@ -64,6 +64,13 @@ body {
     cursor: grabbing;
 }
 
+@media (max-width: 768px) {
+    #logo-canvas {
+        width: 120px;
+        height: 120px;
+    }
+}
+
 #main-nav ul {
     list-style: none;
     display: flex;
