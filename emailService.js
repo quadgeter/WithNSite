@@ -6,17 +6,28 @@ function sendEmail(e) {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Sending...';
 
-  Promise.all([
-    emailjs.sendForm('service_f3petev', 'template_abouckx', form, 'tGpRMPWgA3I6GyErH'),
-    emailjs.sendForm('service_f3petev', 'template_t8mkodm', form, 'tGpRMPWgA3I6GyErH')
-  ]).then(() => {
+  const data = {
+    name: form['full-name'].value,
+    phone: form['phone'].value,
+    email: form['email'].value,
+    service: form['service'].value,
+    details: form['project-details'].value
+  };
+
+  fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then((res) => {
+    if (!res.ok) throw new Error('Server error');
     form.reset();
     submitBtn.disabled = false;
-    submitBtn.textContent = "Submit"
+    submitBtn.textContent = 'Submit';
     showToast('Message Sent!');
   }).catch((error) => {
     console.error('Failed:', error);
     submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
     alert('Something went wrong. Please try again.');
   });
 }
