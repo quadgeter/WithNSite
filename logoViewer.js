@@ -11,8 +11,8 @@ export function initLogoViewer() {
 
     const canvas = document.createElement("canvas");
     canvas.id = "logo-canvas";
-    canvas.width = 120;
-    canvas.height = 120;
+    canvas.width = 190;
+    canvas.height = 190;
     btn.appendChild(canvas);
 
     // Prevent drags/clicks on the canvas from firing the nav button's click handler
@@ -20,7 +20,7 @@ export function initLogoViewer() {
     canvas.addEventListener('pointerdown', (e) => e.stopPropagation());
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setSize(120, 120);
+    renderer.setSize(190, 190);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 

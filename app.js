@@ -191,60 +191,6 @@ class App {
         });
     }
 
-    // FUTURE: for moving to youtube
-
-    // async _loadPlaylistVideos(playlistId) {
-    //     const API_KEY = 'AIzaSyCXrPjz9wCr2upv1iXAYwE5AbHP9wirWAo';
-    //     const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`);
-    //     if (!res.ok) return console.error("Failed to load videos");
-    //     const data = await res.json();
-      
-    //     const container = document.getElementById("playlist-container");
-    //     container.innerHTML = `
-    //     <div class="playlist-header">
-    //         <h3 class="playlist-title">WithNSite</h3>
-    //         <img src="./assets/youtubelogo.png" alt="youtube logo" class="playlist-logo">
-    //     </div>`;
-
-    //     const playlistInner = document.createElement("div");
-    //     playlistInner.classList.add("playlist-inner");
-      
-    //     data.items.forEach(item => {
-    //         const { title, thumbnails, channelTitle, publishedAt, resourceId } = item.snippet;
-    //         const videoId = resourceId.videoId;
-        
-    //         const videoDiv = document.createElement("div");
-    //         videoDiv.classList.add("playlist-item");
-    //         videoDiv.innerHTML = `
-    //         <img src="${thumbnails.medium.url}" alt="${title}" class="thumb" />
-    //         <div class="meta">
-    //             <h4 class="title">${title}</h4>
-    //             <div class="small-text">
-    //                 <p class="channel">${channelTitle}</p>
-    //                 <p class="published">${timeSince(new Date(publishedAt))} ago</p>
-    //             </div>
-    //         </div>
-    //         `;
-        
-    //         videoDiv.addEventListener("click", () => {
-    //             this._changeIframeVideo(videoId); // define this to update the player
-    //         });
-            
-    //         playlistInner.appendChild(videoDiv);
-    //     });
-
-    //     container.appendChild(playlistInner);
-
-    //     function timeSince(date) {
-    //         const seconds = Math.floor((new Date() - date) / 1000);
-    //         const months = Math.floor(seconds / (30 * 24 * 3600));
-    //         const days = Math.floor(seconds / (24 * 3600));
-    //         if (months > 0) return `${months} month${months > 1 ? 's' : ''}`;
-    //         if (days > 0) return `${days} day${days > 1 ? 's' : ''}`;
-    //         return `${Math.floor(seconds / 3600)} hour${seconds > 3600 ? 's' : ''}`;
-    //     }
-    // }
-
     // populate playlist container
     _loadPlaylistVideos(){
         const data = {
