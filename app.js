@@ -248,6 +248,22 @@ class App {
     // populate playlist container
     _loadPlaylistVideos(){
         const data = {
+            'AllenTate Trailer.mp4': {
+                title: "Allen Tate Real Estate Commerical",
+                thumbnail: "thumbnail_allentate.png"
+            },
+            'NSITE proof.mp4': {
+                title: "NSITE",
+                thumbnail: "thumbnail_nsite_proof.png"
+            },
+            'L1Finaledit.mp4': {
+                title: "Real Estate Commerical",
+                thumbnail: "thumbnail_l1finaledit.png"
+            },
+            'foodtruck promo.mp4': {
+                title: "GrillVille Food Truck Commercial",
+                thumbnail: "thumbnail_grillville.png"
+            },
             'ase4_sfull.mp4': {
                 title: "Hype Clinic Commericial",
                 thumbnail: "thumbnail_ase4_sfull.png"
@@ -256,10 +272,6 @@ class App {
                 title: "CGC News Production",
                 thumbnail: "thumbnail_cgc.png"
             }, 
-            'foodtruck promo.mp4': {
-                title: "Food Truck Commercial Production",
-                thumbnail: "thumbnail_grillville.png"
-            },
             'tweakin visual 30 secs.mp4': {
                 title: "Tweakin - Music Video",
                 thumbnail: "thumbnail_tweakin.png"
@@ -355,7 +367,7 @@ class App {
         videoElement.setAttribute("webkit-playsinline", true);
 
         const source = document.createElement("source");
-        source.src = "./assets/vids/ase4_sfull.mp4";
+        source.src = "./assets/vids/AllenTate Trailer.mp4";
         source.type = "video/mp4"; // Or use video/mp4 if you convert to .mp4
 
         videoElement.appendChild(source);

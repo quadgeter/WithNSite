@@ -1,32 +1,31 @@
 function sendEmail(e) {
-  emailjs.sendForm(
-    'service_f3petev',
-    'template_abouckx',
-    e.target,
-    'tGpRMPWgA3I6GyErH' // Public key
-  ).then(
-    (result) => {
-      console.log('Success:', result.text);
-    },
-    (error) => {
-      console.log('Failed:', error.text);
-    }
-  );
+  e.preventDefault();
 
-  emailjs.sendForm(
-    'service_f3petev',
-    'template_t8mkodm',
-    e.target,
-    'tGpRMPWgA3I6GyErH' // Public key
-  ).then(
-    (result) => {
-      console.log('Success:', result.text);
-    },
-    (error) => {
-      console.log('Failed:', error.text);
-    }
-  );
+  const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
 
+  Promise.all([
+    emailjs.sendForm('service_f3petev', 'template_abouckx', form, 'tGpRMPWgA3I6GyErH'),
+    emailjs.sendForm('service_f3petev', 'template_t8mkodm', form, 'tGpRMPWgA3I6GyErH')
+  ]).then(() => {
+    form.reset();
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit"
+    showToast('Message Sent!');
+  }).catch((error) => {
+    console.error('Failed:', error);
+    submitBtn.disabled = false;
+    alert('Something went wrong. Please try again.');
+  });
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast-notification');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 window.sendEmail = sendEmail;

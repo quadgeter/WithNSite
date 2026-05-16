@@ -805,6 +805,27 @@ body {
   margin-top: 2rem;
 }
 
+#toast-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #22c55e;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#toast-notification.show {
+  opacity: 1;
+}
+
 #loading-bar {
   width: 0%;
   height: 100%;
