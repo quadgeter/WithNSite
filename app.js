@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "jsm/controls/OrbitControls.js";
-import { GLTFLoader } from "https://unpkg.com/three@latest/examples/jsm/loaders/GLTFLoader.js";
-import { CSS3DRenderer, CSS3DObject } from "https://unpkg.com/three/examples/jsm/renderers/CSS3DRenderer.js";
+import { GLTFLoader } from "jsm/loaders/GLTFLoader.js";
+import { CSS3DRenderer, CSS3DObject } from "jsm/renderers/CSS3DRenderer.js";
 import { getScenePreset } from "./getScenePreset.js";
 import { LoadingManager } from "three";
 
